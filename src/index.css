@@ -2,5 +2,226 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root { height: 100%; }
-body { margin: 0; }
+/* ============================================================
+   "Midnight Console" — a dark-first data instrument.
+   Dark is the default identity; .light is a daylight inverse.
+   Every downstream colour reads these variables.
+   ============================================================ */
+:root {
+  --font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-ui);
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --canvas: #0a0b0e;
+  --surface: #101319;
+  --surface-2: #161a21;
+  --surface-3: #1d222b;
+  --ink: #e9ecf1;
+  --muted: #9ba1ad;
+  --faint: #616978;
+  --line: #212630;
+  --line-strong: #323a47;
+
+  --accent: #c6f24e;
+  --accent-hover: #d4ff6a;
+  --accent-ink: #0a0b0e;
+  --accent-soft: rgba(198, 242, 78, 0.12);
+  --accent-ring: rgba(198, 242, 78, 0.4);
+
+  /* Field-type taxonomy — a small colour key encoding the data kind. */
+  --cat-identity: #8b93ff;
+  --cat-contact: #43d6c6;
+  --cat-temporal: #e7b14a;
+  --cat-numeric: #7bd88a;
+  --cat-enum: #f284a8;
+  --cat-rich: #9aa6e0;
+  --cat-text: #5b6270;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -18px rgba(0, 0, 0, 0.75);
+  --shadow-pop: 0 20px 60px -18px rgba(0, 0, 0, 0.85);
+  --overlay: rgba(2, 3, 5, 0.72);
+}
+
+.light {
+  --canvas: #f2f3f0;
+  --surface: #ffffff;
+  --surface-2: #f1f3ee;
+  --surface-3: #e9ece4;
+  --ink: #15180f;
+  --muted: #5d6356;
+  --faint: #9aa090;
+  --line: #e3e5dd;
+  --line-strong: #cdd0c5;
+
+  --accent: #4d7c0a;
+  --accent-hover: #5e930f;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(77, 124, 10, 0.1);
+  --accent-ring: rgba(77, 124, 10, 0.35);
+
+  --cat-identity: #6a5af0;
+  --cat-contact: #0e94a6;
+  --cat-temporal: #b0740f;
+  --cat-numeric: #2e9e63;
+  --cat-enum: #c94e77;
+  --cat-rich: #5b6bb5;
+  --cat-text: #a6abb2;
+
+  --shadow-card: 0 1px 2px rgba(20, 22, 30, 0.05), 0 8px 24px -16px rgba(20, 22, 30, 0.22);
+  --shadow-pop: 0 16px 50px -14px rgba(20, 22, 30, 0.35);
+  --overlay: rgba(22, 24, 20, 0.42);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Specimen reveal (the one orchestrated motion) ---- */
+@keyframes specimen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.specimen-in {
+  animation: specimen-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .specimen-in {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Rich content — inline formatted preview (Update Message)
+   and chat transcript (Ticket). Hand-styled for both themes.
+   ============================================================ */
+.rich {
+  font-family: var(--font-ui);
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.rich h1,
+.rich h2,
+.rich h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0 0 0.5em;
+}
+.rich h2 {
+  font-size: 1.15em;
+}
+.rich p {
+  margin: 0 0 0.7em;
+}
+.rich p:last-child {
+  margin-bottom: 0;
+}
+.rich strong {
+  font-weight: 600;
+}
+.rich em {
+  font-style: italic;
+}
+.rich a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rich ul,
+.rich ol {
+  margin: 0 0 0.7em;
+  padding-left: 1.2em;
+}
+.rich li {
+  margin: 0.15em 0;
+}
+
+.rich .chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rich .msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+}
+.rich .msg .who {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+  margin: 0 0 3px 2px;
+}
+.rich .msg .bubble {
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.rich .msg--a {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+.rich .msg--a .bubble {
+  background: var(--surface-3);
+  color: var(--ink);
+  border-bottom-left-radius: 5px;
+}
+.rich .msg--b {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+.rich .msg--b .who {
+  margin: 0 2px 3px 0;
+}
+.rich .msg--b .bubble {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-bottom-right-radius: 5px;
+}

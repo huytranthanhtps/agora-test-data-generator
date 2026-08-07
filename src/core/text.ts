@@ -22,8 +22,12 @@ export function htmlMessage(rng: Rng, len: TextLen): string {
 export function chatTranscript(_rng: Rng, a: string, b: string, messages: number): string {
   const lines: string[] = []
   for (let i = 0; i < messages; i++) {
-    const who = i % 2 === 0 ? a : b
-    lines.push(`<div class="msg"><b>${who}:</b> ${faker.lorem.sentence()}</div>`)
+    const isA = i % 2 === 0
+    const who = isA ? a : b
+    const side = isA ? 'msg--a' : 'msg--b'
+    lines.push(
+      `<div class="msg ${side}"><span class="who">${who}</span><span class="bubble">${faker.lorem.sentence()}</span></div>`,
+    )
   }
   return `<div class="chat">\n${lines.join('\n')}\n</div>`
 }

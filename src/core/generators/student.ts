@@ -12,7 +12,6 @@ export const studentGenerator: Generator = {
   fields: [
     { key: 'firstName', label: 'First name' },
     { key: 'lastName', label: 'Last name' },
-    { key: 'fullName', label: 'Full name' },
     { key: 'preferredName', label: 'Preferred name' },
     { key: 'chineseName', label: 'Chinese name' },
     { key: 'gender', label: 'Gender' },
@@ -28,7 +27,6 @@ export const studentGenerator: Generator = {
       return {
         firstName: p.first,
         lastName: p.last,
-        fullName: p.full,
         preferredName: preferredName(rng),
         chineseName: chineseName(rng),
         gender: p.gender,

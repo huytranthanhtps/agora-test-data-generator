@@ -9,10 +9,8 @@ export const parentGenerator: Generator = {
   label: 'Parent',
   shortcut: 1,
   fields: [
-    { key: 'avatar', label: 'Avatar' },
     { key: 'firstName', label: 'First name' },
     { key: 'lastName', label: 'Last name' },
-    { key: 'fullName', label: 'Full name' },
     { key: 'email', label: 'Email' },
     { key: 'mobile', label: 'Mobile' },
     { key: 'gender', label: 'Gender' },
@@ -26,10 +24,8 @@ export const parentGenerator: Generator = {
       const p = makePerson(rng)
       const { dob } = dobForAge(rng, 28, 50)
       return {
-        avatar: p.full,
         firstName: p.first,
         lastName: `${p.last} ${DEV_MARKER}`,
-        fullName: `${p.full} ${DEV_MARKER}`,
         email: makeEmail(p, uniq),
         mobile: sgMobile(rng),
         gender: p.gender,

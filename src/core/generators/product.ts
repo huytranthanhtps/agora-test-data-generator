@@ -1,5 +1,4 @@
 import type { Generator } from '../types'
-import { slugify } from './shared'
 import { loremByLen } from '../text'
 import { faker } from '../faker-seed'
 import {
@@ -16,7 +15,6 @@ export const productGenerator: Generator = {
     { key: 'sku', label: 'SKU' },
     { key: 'name', label: 'Name' },
     { key: 'description', label: 'Description' },
-    { key: 'slug', label: 'Slug' },
     { key: 'variantName', label: 'Variant name' },
     { key: 'status', label: 'Status' },
     { key: 'productType', label: 'Product type' },
@@ -39,7 +37,6 @@ export const productGenerator: Generator = {
         sku,
         name,
         description: loremByLen(rng, len),
-        slug: slugify(name),
         variantName: faker.commerce.productAdjective() + ' ' + faker.commerce.product(),
         status: rng.pick(PRODUCT_STATUS),
         productType: rng.pick(PRODUCT_TYPE),

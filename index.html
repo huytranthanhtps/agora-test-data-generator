@@ -3,7 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agora Test Data Generator</title>
+    <title>Agora · Test Data Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Dark is the default; only opt into light before first paint.
+      try {
+        if (localStorage.getItem('theme') === 'light')
+          document.documentElement.classList.add('light')
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,6 +1,10 @@
 import { useEffect } from 'react'
+import { X } from 'lucide-react'
 
-interface Props { html: string | null; onClose: () => void }
+interface Props {
+  html: string | null
+  onClose: () => void
+}
 
 export function HtmlPreviewDialog({ html, onClose }: Props) {
   useEffect(() => {
@@ -14,11 +18,29 @@ export function HtmlPreviewDialog({ html, onClose }: Props) {
 
   if (html === null) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="max-h-[80vh] w-full max-w-2xl overflow-auto rounded-lg bg-white p-6 dark:bg-neutral-900"
-        onClick={e => e.stopPropagation()}>
-        <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
-        <button onClick={onClose} className="mt-4 rounded-md border px-3 py-1 text-sm">Close</button>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'var(--overlay)' }}
+      onClick={onClose}
+    >
+      <div
+        className="flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-pop"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
+            Preview
+          </span>
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 rounded-md border border-line bg-surface2 px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-lineStrong hover:text-ink"
+          >
+            <X size={13} /> Close
+          </button>
+        </div>
+        <div className="overflow-auto p-6">
+          <div className="rich" dangerouslySetInnerHTML={{ __html: html }} />
+        </div>
       </div>
     </div>
   )

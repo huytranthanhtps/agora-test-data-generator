@@ -24,7 +24,7 @@ describe('people generators', () => {
   it('parent name carries DEV marker', () => {
     seedFaker('s')
     const [r] = parentGenerator.generate({ count: 1, len: 'normal' }, ctx())
-    expect(r.fullName).toContain('[DEV]')
+    expect(r.lastName).toContain('[DEV]')
   })
   it('student age is within 4-16 and matches dob year', () => {
     seedFaker('s')

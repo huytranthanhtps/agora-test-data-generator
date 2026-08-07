@@ -9,11 +9,10 @@ import { klassGenerator } from '@/core/generators/klass'
 function ctx() { return { rng: new Rng('s'), uniq: new Uniqueness(new Rng('s')) } }
 
 describe('academic generators', () => {
-  it('course names are unique and slug matches name', () => {
+  it('course names are unique within a batch', () => {
     seedFaker('s')
     const rows = courseGenerator.generate({ count: 25, len: 'normal' }, ctx())
     expect(new Set(rows.map(r => r.name)).size).toBe(rows.length)
-    expect(rows[0].slug).toBe(rows[0].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
   })
   it('course maxAge >= minAge', () => {
     seedFaker('s')

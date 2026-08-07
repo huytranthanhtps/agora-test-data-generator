@@ -1,5 +1,4 @@
 import type { Generator } from '../types'
-import { slugify } from './shared'
 import { loremByLen } from '../text'
 import { SUBJECTS, LEVELS, SUBJECT_TYPE } from '../data'
 
@@ -10,7 +9,6 @@ export const courseGenerator: Generator = {
   fields: [
     { key: 'name', label: 'Name' },
     { key: 'description', label: 'Description' },
-    { key: 'slug', label: 'Slug' },
     { key: 'subjectType', label: 'Subject type' },
     { key: 'minAge', label: 'Min age' },
     { key: 'maxAge', label: 'Max age' },
@@ -29,7 +27,6 @@ export const courseGenerator: Generator = {
       return {
         name,
         description: loremByLen(rng, len),
-        slug: slugify(name),
         subjectType: rng.pick(SUBJECT_TYPE),
         minAge: String(minAge),
         maxAge: String(minAge + rng.int(2, 4)),
