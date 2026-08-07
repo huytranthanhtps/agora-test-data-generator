@@ -1,6 +1,17 @@
+import { useEffect } from 'react'
+
 interface Props { html: string | null; onClose: () => void }
 
 export function HtmlPreviewDialog({ html, onClose }: Props) {
+  useEffect(() => {
+    if (html === null) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [html, onClose])
+
   if (html === null) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>

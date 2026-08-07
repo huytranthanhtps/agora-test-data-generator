@@ -16,7 +16,12 @@ export function useGenerator() {
     }))
   }, [entityKey, count, len, seed, messages])
 
+  const selectEntity = useCallback((key: string) => {
+    setEntityKey(key)
+    setRows([])
+  }, [])
+
   const generator = getGenerator(entityKey)!
-  return { entityKey, setEntityKey, count, setCount, seed, setSeed, len, setLen,
+  return { entityKey, selectEntity, count, setCount, seed, setSeed, len, setLen,
     messages, setMessages, rows, run, generator }
 }

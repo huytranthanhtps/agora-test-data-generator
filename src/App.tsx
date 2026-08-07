@@ -22,7 +22,7 @@ export default function App() {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return
       const n = Number(e.key)
       const match = GENERATORS.find(x => x.shortcut === n)
-      if (match) g.setEntityKey(match.key)
+      if (match) g.selectEntity(match.key)
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
@@ -30,7 +30,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
-      <Sidebar active={g.entityKey} onSelect={g.setEntityKey} theme={theme} onToggleTheme={toggle} />
+      <Sidebar active={g.entityKey} onSelect={g.selectEntity} theme={theme} onToggleTheme={toggle} />
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <Toolbar
           count={g.count} setCount={g.setCount}
