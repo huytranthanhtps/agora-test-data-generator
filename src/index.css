@@ -12,29 +12,29 @@
   --font-display: 'Space Grotesk', var(--font-ui);
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  --canvas: #0a0b0e;
-  --surface: #101319;
-  --surface-2: #161a21;
-  --surface-3: #1d222b;
-  --ink: #e9ecf1;
-  --muted: #9ba1ad;
-  --faint: #616978;
-  --line: #212630;
-  --line-strong: #323a47;
+  --canvas: #0f1116;
+  --surface: #171a21;
+  --surface-2: #1d212b;
+  --surface-3: #262b37;
+  --ink: #e6e8ee;
+  --muted: #9aa0ae;
+  --faint: #616776;
+  --line: #242833;
+  --line-strong: #343a48;
 
-  --accent: #c6f24e;
-  --accent-hover: #d4ff6a;
-  --accent-ink: #0a0b0e;
-  --accent-soft: rgba(198, 242, 78, 0.12);
-  --accent-ring: rgba(198, 242, 78, 0.4);
+  --accent: #6e72f0;
+  --accent-hover: #7f83ff;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(110, 114, 240, 0.16);
+  --accent-ring: rgba(110, 114, 240, 0.5);
 
   /* Field-type taxonomy — a small colour key encoding the data kind. */
-  --cat-identity: #8b93ff;
-  --cat-contact: #43d6c6;
-  --cat-temporal: #e7b14a;
-  --cat-numeric: #7bd88a;
-  --cat-enum: #f284a8;
-  --cat-rich: #9aa6e0;
+  --cat-identity: #a78bfa;
+  --cat-contact: #45d0c4;
+  --cat-temporal: #e9b45c;
+  --cat-numeric: #6fd995;
+  --cat-enum: #f07aa6;
+  --cat-rich: #8595c6;
   --cat-text: #5b6270;
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -18px rgba(0, 0, 0, 0.75);
@@ -43,29 +43,29 @@
 }
 
 .light {
-  --canvas: #f2f3f0;
+  --canvas: #f6f7f9;
   --surface: #ffffff;
-  --surface-2: #f1f3ee;
-  --surface-3: #e9ece4;
-  --ink: #15180f;
-  --muted: #5d6356;
-  --faint: #9aa090;
-  --line: #e3e5dd;
-  --line-strong: #cdd0c5;
+  --surface-2: #f1f3f6;
+  --surface-3: #e9ecf1;
+  --ink: #1c1f26;
+  --muted: #5b616e;
+  --faint: #99a0ad;
+  --line: #e6e8ee;
+  --line-strong: #d2d6df;
 
-  --accent: #4d7c0a;
-  --accent-hover: #5e930f;
+  --accent: #5457e6;
+  --accent-hover: #4a4ddb;
   --accent-ink: #ffffff;
-  --accent-soft: rgba(77, 124, 10, 0.1);
-  --accent-ring: rgba(77, 124, 10, 0.35);
+  --accent-soft: rgba(84, 87, 230, 0.1);
+  --accent-ring: rgba(84, 87, 230, 0.35);
 
-  --cat-identity: #6a5af0;
-  --cat-contact: #0e94a6;
-  --cat-temporal: #b0740f;
-  --cat-numeric: #2e9e63;
-  --cat-enum: #c94e77;
+  --cat-identity: #7c5cf0;
+  --cat-contact: #0ea5b6;
+  --cat-temporal: #c98a1e;
+  --cat-numeric: #2f9e63;
+  --cat-enum: #d1568a;
   --cat-rich: #5b6bb5;
-  --cat-text: #a6abb2;
+  --cat-text: #a6abb4;
 
   --shadow-card: 0 1px 2px rgba(20, 22, 30, 0.05), 0 8px 24px -16px rgba(20, 22, 30, 0.22);
   --shadow-pop: 0 16px 50px -14px rgba(20, 22, 30, 0.35);
@@ -111,6 +111,14 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Tab strips scroll horizontally without showing a scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* ---- Specimen reveal (the one orchestrated motion) ---- */

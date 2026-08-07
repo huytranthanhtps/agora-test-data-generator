@@ -21,7 +21,7 @@ export function TopNav({ active, onSelect, theme, onToggleTheme }: Props) {
           </span>
         </div>
 
-        <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+        <nav className="no-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
           {GENERATORS.map((g) => {
             const on = active === g.key
             return (
