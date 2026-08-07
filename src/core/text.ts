@@ -81,6 +81,43 @@ const ul = (r: Rng, n: number) => `<ul>${Array.from({ length: n }, () => `<li>${
 const ol = (r: Rng, n: number) => `<ol>${Array.from({ length: n }, () => `<li>${step(r)}</li>`).join('')}</ol>`
 const para = (r: Rng, n: number) => `<p>${Array.from({ length: n }, () => announce(r)).join(' ')}</p>`
 
+/** Meaningful, length-scaled description for a Course. */
+export function courseDescription(
+  r: Rng,
+  p: { subject: string; grade: string; focus: string; sessions: number; duration: number },
+  len: TextLen,
+): string {
+  const art = p.sessions === 8 || p.sessions === 11 ? 'An' : 'A'
+  const s = [
+    `${art} ${p.sessions}-session ${p.subject} programme for ${p.grade} students, focused on ${p.focus.toLowerCase()}.`,
+    `Each ${p.duration}-minute lesson blends guided practice with ${r.pick(['weekly quizzes', 'project work', 'past-paper drills', 'hands-on labs'])}.`,
+    `Class size is capped at ${r.int(8, 18)} for personalised feedback.`,
+    `Progress reports are shared with parents every ${r.int(2, 4)} weeks.`,
+    `A ${p.subject} revision kit and online resources are included.`,
+  ]
+  if (len === 'normal') return s[0]
+  if (len === 'long') return s.slice(0, 3).join(' ')
+  return `${s.join(' ')} ${faker.lorem.paragraph()}`
+}
+
+/** Meaningful, length-scaled description for a Product. */
+export function productDescription(
+  r: Rng,
+  p: { subject: string; grade: string; base: string; edition: string },
+  len: TextLen,
+): string {
+  const s = [
+    `The ${p.base.toLowerCase()} for ${p.subject} (${p.grade}) — ${p.edition}.`,
+    `Includes ${r.int(6, 12)} units and ${r.int(20, 60)} graded practice sets.`,
+    `Aligned to the ${r.pick(['MOE', 'Cambridge', 'IB'])} syllabus for ${r.int(2025, 2027)}.`,
+    `Ships with answer keys and a progress tracker.`,
+    `Bulk pricing available for classes of ${r.int(10, 30)}+.`,
+  ]
+  if (len === 'normal') return s[0]
+  if (len === 'long') return s.slice(0, 3).join(' ')
+  return `${s.join(' ')} ${faker.lorem.paragraph()}`
+}
+
 /** A meaningful Update Message title — emoji + topic + subject/grade + venue. */
 export function messageTitle(r: Rng): string {
   return `${r.pick(TITLE_EMOJI)} ${r.pick(TOPICS)} — ${r.pick(SUBJECTS)} ${r.pick(GRADES)} (${r.pick(VENUES)})`

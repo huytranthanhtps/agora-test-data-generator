@@ -1,6 +1,9 @@
 import type { Generator } from '../types'
-import { loremByLen } from '../text'
-import { SUBJECTS, LEVELS, SUBJECT_TYPE } from '../data'
+import { courseDescription } from '../text'
+import { faker } from '../faker-seed'
+import { SUBJECTS, SUBJECT_TYPE, GRADES, COURSE_FOCUS } from '../data'
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 export const courseGenerator: Generator = {
   key: 'course',
@@ -19,20 +22,32 @@ export const courseGenerator: Generator = {
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
+      const sessions = rng.int(4, 12)
+      const duration = rng.pick([60, 90, 120] as const)
+      // Pick the parts INSIDE the uniqueness producer so a collision re-rolls
+      // to a genuinely different name; the closure vars keep the accepted pick.
+      let subject = '',
+        grade = '',
+        focus = ''
       const name = uniq.ensure('course.name', () => {
-        const base = `${rng.pick(SUBJECTS)} ${rng.pick(LEVELS)}`
-        return len === 'stress' ? `${base} ${rng.pick(SUBJECTS)} ${rng.pick(LEVELS)} Programme` : base
+        subject = rng.pick(SUBJECTS)
+        grade = rng.pick(GRADES)
+        focus = rng.pick(COURSE_FOCUS)
+        // Faker adjective lifts the combination space into the millions so a
+        // batch is unique in practice; the tracker is still the hard guarantee.
+        const base = `${grade} ${subject} — ${cap(faker.word.adjective())} ${focus}`
+        return len === 'stress' ? `${base} (Intake ${faker.number.int({ min: 1, max: 99 })})` : base
       })
       const minAge = rng.int(4, 12)
       return {
         name,
-        description: loremByLen(rng, len),
+        description: courseDescription(rng, { subject, grade, focus, sessions, duration }, len),
         subjectType: rng.pick(SUBJECT_TYPE),
         minAge: String(minAge),
         maxAge: String(minAge + rng.int(2, 4)),
         price: String(rng.int(120, 800)),
-        sessions: String(rng.int(4, 12)),
-        duration: String(rng.pick([60, 90, 120] as const)),
+        sessions: String(sessions),
+        duration: String(duration),
         seats: String(rng.int(8, 30)),
       }
     })

@@ -1,5 +1,6 @@
 import type { Generator } from '../types'
 import { makePerson } from '../names'
+import { faker } from '../faker-seed'
 import { GRADES, SUBJECTS, LEVELS, BUSINESS_UNITS, VENUES, PROGRAMMES } from '../data'
 
 export const klassGenerator: Generator = {
@@ -17,8 +18,11 @@ export const klassGenerator: Generator = {
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
       const className = uniq.ensure('class.name', () => {
-        const base = `${rng.pick(GRADES)} ${rng.pick(SUBJECTS)}`
-        return len === 'stress' ? `${base} ${rng.pick(LEVELS)} (${rng.pick(PROGRAMMES)})` : base
+        // A faker-driven section code (e.g. "B7") keeps class names unique and
+        // reads like a real class section.
+        const section = `${faker.string.alpha({ length: 1, casing: 'upper' })}${faker.number.int({ min: 1, max: 9 })}`
+        const base = `${rng.pick(GRADES)} ${rng.pick(SUBJECTS)} — Class ${section}`
+        return len === 'stress' ? `${base} (${rng.pick(LEVELS)} · ${rng.pick(PROGRAMMES)})` : base
       })
       const teachers = Array.from({ length: rng.int(1, 3) }, () =>
         uniq.ensure('class.teacher', () => makePerson(rng).full)).join(', ')

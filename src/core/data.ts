@@ -29,6 +29,8 @@ export const VARIANT_TYPE = ['Single', 'Bundle', 'Subscription'] as const
 export const TIME_PERIOD = ['Term 1', 'Term 2', 'Term 3', 'Term 4', 'Full Year'] as const
 export const SEND_TO = ['All Parents', 'All Students', 'Class Members', 'Specific Group', 'Staff Only'] as const
 export const PRODUCT_BASES = ['Workbook', 'Assessment Kit', 'Learning Bundle', 'Practice Pack', 'Membership Pass'] as const
+export const COURSE_FOCUS = ['Problem Solving', 'Exam Prep', 'Foundations', 'Concept Mastery', 'Critical Thinking', 'Creative Writing', 'Lab Skills', 'Olympiad Training', 'Speech & Drama', 'Revision Intensive'] as const
+export const PRODUCT_EDITIONS = ['2026 Edition', 'Revised Edition', 'Deluxe Set', 'Starter Pack', 'Complete Bundle', 'Digital Access', 'Practice Companion'] as const
 
 export const DEV_MARKER = '[DEV]'
 export const EMAIL_DOMAIN = 'mailinator.com'

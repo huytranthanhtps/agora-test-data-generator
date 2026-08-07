@@ -1,11 +1,19 @@
 import type { Generator } from '../types'
-import { loremByLen } from '../text'
+import { productDescription } from '../text'
 import { faker } from '../faker-seed'
 import {
-  SUBJECTS, PRODUCT_BASES, PRODUCT_STATUS, PRODUCT_TYPE, VARIANT_TYPE, TIME_PERIOD,
+  SUBJECTS,
+  GRADES,
+  PRODUCT_BASES,
+  PRODUCT_EDITIONS,
+  PRODUCT_STATUS,
+  PRODUCT_TYPE,
+  VARIANT_TYPE,
+  TIME_PERIOD,
 } from '../data'
 
 const ALNUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 export const productGenerator: Generator = {
   key: 'product',
@@ -28,15 +36,24 @@ export const productGenerator: Generator = {
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
       const sku = uniq.ensure('product.sku', () =>
-        'AGR-' + Array.from({ length: 6 }, () => ALNUM[rng.int(0, ALNUM.length - 1)]).join(''))
+        'AGR-' + Array.from({ length: 6 }, () => ALNUM[rng.int(0, ALNUM.length - 1)]).join(''),
+      )
+      let subject = '',
+        grade = '',
+        base = '',
+        edition = ''
       const name = uniq.ensure('product.name', () => {
-        const base = `${rng.pick(SUBJECTS)} ${rng.pick(PRODUCT_BASES)}`
-        return len === 'stress' ? `${base} ${rng.pick(TIME_PERIOD)} Edition` : base
+        subject = rng.pick(SUBJECTS)
+        grade = rng.pick(GRADES)
+        base = rng.pick(PRODUCT_BASES)
+        edition = rng.pick(PRODUCT_EDITIONS)
+        const nm = `${cap(faker.commerce.productAdjective())} ${subject} ${grade} ${base} — ${edition}`
+        return len === 'stress' ? `${nm} (Vol. ${faker.number.int({ min: 1, max: 9 })})` : nm
       })
       return {
         sku,
         name,
-        description: loremByLen(rng, len),
+        description: productDescription(rng, { subject, grade, base, edition }, len),
         variantName: faker.commerce.productAdjective() + ' ' + faker.commerce.product(),
         status: rng.pick(PRODUCT_STATUS),
         productType: rng.pick(PRODUCT_TYPE),
