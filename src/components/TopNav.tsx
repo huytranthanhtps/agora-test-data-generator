@@ -30,17 +30,14 @@ export function TopNav({ active, onSelect, theme, onToggleTheme }: Props) {
                 onClick={() => onSelect(g.key)}
                 aria-current={on ? 'true' : undefined}
                 className={cn(
-                  'relative shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 text-[13px] transition-colors',
-                  on ? 'text-ink' : 'text-muted hover:text-ink',
+                  'shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 text-[13px] transition-colors',
+                  on ? 'bg-accentSoft text-ink' : 'text-muted hover:bg-surface2 hover:text-ink',
                 )}
               >
-                <span className="mr-1.5 font-mono text-[10px] text-faint">
+                <span className={cn('mr-1.5 font-mono text-[10px]', on ? 'text-accent' : 'text-faint')}>
                   {g.shortcut}
                 </span>
                 {g.label}
-                {on && (
-                  <span className="absolute inset-x-2 -bottom-[9px] h-[2px] rounded-full bg-accent" />
-                )}
               </button>
             )
           })}
