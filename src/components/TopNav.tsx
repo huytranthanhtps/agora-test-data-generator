@@ -11,7 +11,7 @@ interface Props {
 
 export function TopNav({ active, onSelect, theme, onToggleTheme }: Props) {
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-canvas/85 backdrop-blur-md">
+    <header className="shrink-0 border-b border-line bg-canvas">
       <div className="flex h-14 items-center gap-6 px-6">
         <div className="flex shrink-0 items-baseline gap-1.5">
           <span className="font-display text-[19px] font-bold tracking-tight text-ink">Agora</span>

@@ -85,7 +85,7 @@ export function Console(p: Props) {
   )
 
   return (
-    <section className="px-6 pt-5">
+    <section className="shrink-0 px-6 pt-5">
       <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-card">
         {/* Command readout — the live config as a pseudo-command. */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-line bg-surface2 px-4 py-2.5 font-mono text-[12px]">
