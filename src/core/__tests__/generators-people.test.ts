@@ -21,10 +21,10 @@ describe('people generators', () => {
       expect(r.relationship).toBe(r.gender === 'male' ? 'father' : 'mother')
     }
   })
-  it('parent name carries DEV marker', () => {
+  it('parent email carries the .agoradev tag', () => {
     seedFaker('s')
     const [r] = parentGenerator.generate({ count: 1, len: 'normal' }, ctx())
-    expect(r.lastName).toContain('[DEV]')
+    expect(r.email).toMatch(/\.agoradev@mailinator\.com$/)
   })
   it('student age is within 4-16 and matches dob year', () => {
     seedFaker('s')

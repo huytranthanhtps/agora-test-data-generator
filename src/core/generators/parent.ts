@@ -2,7 +2,6 @@ import type { Generator } from '../types'
 import { makePerson, makeEmail, sgMobile, sgPostcode } from '../names'
 import { dobForAge } from './shared'
 import { faker } from '../faker-seed'
-import { DEV_MARKER } from '../data'
 
 export const parentGenerator: Generator = {
   key: 'parent',
@@ -25,7 +24,7 @@ export const parentGenerator: Generator = {
       const { dob } = dobForAge(rng, 28, 50)
       return {
         firstName: p.first,
-        lastName: `${p.last} ${DEV_MARKER}`,
+        lastName: p.last,
         email: makeEmail(p, uniq),
         mobile: sgMobile(rng),
         gender: p.gender,

@@ -1,6 +1,5 @@
 import type { Generator } from '../types'
-import { htmlMessage } from '../text'
-import { faker } from '../faker-seed'
+import { htmlMessage, messageTitle } from '../text'
 import { SEND_TO } from '../data'
 
 export const messageGenerator: Generator = {
@@ -15,7 +14,7 @@ export const messageGenerator: Generator = {
   ],
   generate({ count, len }, { rng }) {
     return Array.from({ length: count }, () => ({
-      title: len === 'stress' ? faker.lorem.words(20) : faker.lorem.words(rng.int(3, 7)),
+      title: messageTitle(rng),
       message: htmlMessage(rng, len),
       sendTo: rng.pick(SEND_TO),
       type: 'update',

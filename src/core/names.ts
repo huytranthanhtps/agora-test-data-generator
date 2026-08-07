@@ -44,7 +44,8 @@ export function makeEmail(person: Person, uniq: Uniqueness): string {
   return uniq.ensure('email', () => {
     const suffix = seq === 0 ? '' : String(seq)
     seq++
-    return `${local}${suffix}@${EMAIL_DOMAIN}`
+    // `.agoradev` tag keeps generated addresses clear of real inboxes.
+    return `${local}${suffix}.agoradev@${EMAIL_DOMAIN}`
   })
 }
 

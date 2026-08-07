@@ -1,12 +1,13 @@
 import type { Generator } from '../types'
 import { makePerson } from '../names'
-import { chatTranscript } from '../text'
+import { chatTranscript, TICKET_SCENARIOS } from '../text'
 
 export const ticketGenerator: Generator = {
   key: 'ticket',
   label: 'Ticket',
   shortcut: 8,
   fields: [
+    { key: 'subject', label: 'Subject' },
     { key: 'participantA', label: 'Participant A' },
     { key: 'participantB', label: 'Participant B' },
     { key: 'messages', label: 'Messages' },
@@ -17,11 +18,13 @@ export const ticketGenerator: Generator = {
       const a = uniq.ensure('ticket.participant', () => makePerson(rng).full)
       const b = uniq.ensure('ticket.participant', () => makePerson(rng).full)
       const n = messagesPerTicket ?? rng.int(3, 10)
+      const scenario = rng.pick(TICKET_SCENARIOS)
       return {
+        subject: scenario.label,
         participantA: a,
         participantB: b,
         messages: String(n),
-        conversation: chatTranscript(rng, a, b, n),
+        conversation: chatTranscript(rng, a, b, n, scenario.key),
       }
     })
   },
