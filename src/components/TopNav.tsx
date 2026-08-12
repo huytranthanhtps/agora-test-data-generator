@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react'
 import { GENERATORS } from '@/core'
 import { cn } from '@/lib/cn'
-import { Check, ChevronDown, Moon, Sun } from 'lucide-react'
+import { Check, ChevronDown, Moon, Smartphone, Sun } from 'lucide-react'
 
 interface Props {
   active: string
   onSelect: (key: string) => void
   theme: 'light' | 'dark'
   onToggleTheme: () => void
+  showAddToHome: boolean
+  onOpenAddToHome: () => void
 }
 
-export function TopNav({ active, onSelect, theme, onToggleTheme }: Props) {
+export function TopNav({
+  active,
+  onSelect,
+  theme,
+  onToggleTheme,
+  showAddToHome,
+  onOpenAddToHome,
+}: Props) {
   const [open, setOpen] = useState(false)
   const activeLabel = GENERATORS.find((g) => g.key === active)?.label ?? 'Select'
 
@@ -58,6 +67,16 @@ export function TopNav({ active, onSelect, theme, onToggleTheme }: Props) {
 
         {/* Mobile: push the theme toggle to the right */}
         <div className="flex-1 sm:hidden" />
+
+        {showAddToHome && (
+          <button
+            onClick={onOpenAddToHome}
+            aria-label="Thêm vào màn hình chính"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-line text-muted transition-colors hover:border-lineStrong hover:text-ink sm:hidden"
+          >
+            <Smartphone size={15} />
+          </button>
+        )}
 
         <button
           onClick={onToggleTheme}

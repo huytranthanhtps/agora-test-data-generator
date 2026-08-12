@@ -8,14 +8,21 @@ import { TopNav } from '@/components/TopNav'
 import { Console } from '@/components/Console'
 import { RecordCard } from '@/components/RecordCard'
 import { HtmlPreviewDialog } from '@/components/HtmlPreviewDialog'
+import { AddToHomeDialog } from '@/components/AddToHomeDialog'
+import { detectPlatform, isStandalone } from '@/lib/platform'
+import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import { Terminal } from 'lucide-react'
 
 export default function App() {
   const g = useGenerator()
   const { theme, toggle } = useTheme()
   const { copied, copy, copyRich } = useCopy()
+  const { canInstall, promptInstall } = useInstallPrompt()
   const [preview, setPreview] = useState<string | null>(null)
   const [runId, setRunId] = useState(0)
+  const [addOpen, setAddOpen] = useState(false)
+  const [platform] = useState(() => detectPlatform(navigator.userAgent))
+  const [standalone] = useState(() => isStandalone())
 
   useEffect(() => setRunId((n) => n + 1), [g.rows])
 
@@ -31,7 +38,14 @@ export default function App() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-canvas font-sans text-ink sm:h-screen sm:overflow-hidden">
-      <TopNav active={g.entityKey} onSelect={g.selectEntity} theme={theme} onToggleTheme={toggle} />
+      <TopNav
+        active={g.entityKey}
+        onSelect={g.selectEntity}
+        theme={theme}
+        onToggleTheme={toggle}
+        showAddToHome={!standalone}
+        onOpenAddToHome={() => setAddOpen(true)}
+      />
 
       <Console
         entityKey={g.entityKey}
@@ -101,6 +115,17 @@ export default function App() {
       </main>
 
       <HtmlPreviewDialog html={preview} onClose={() => setPreview(null)} />
+
+      <AddToHomeDialog
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        platform={platform}
+        canInstall={canInstall}
+        onInstall={() => {
+          promptInstall()
+          setAddOpen(false)
+        }}
+      />
     </div>
   )
 }
