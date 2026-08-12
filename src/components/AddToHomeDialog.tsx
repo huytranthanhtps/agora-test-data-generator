@@ -22,6 +22,78 @@ function Step({ n, children }: { n: number; children: ReactNode }) {
   )
 }
 
+function DialogBody({
+  platform,
+  canInstall,
+  onInstall,
+}: {
+  platform: Platform
+  canInstall: boolean
+  onInstall: () => void
+}) {
+  if (canInstall && platform === 'android') {
+    return (
+      <>
+        <p className="mb-4 text-[14px] text-muted">
+          Cài Agora như một ứng dụng để mở nhanh từ màn hình chính.
+        </p>
+        <button
+          onClick={onInstall}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-[15px] font-medium text-white"
+        >
+          <Plus size={17} /> Cài đặt ngay
+        </button>
+      </>
+    )
+  }
+
+  if (platform === 'ios') {
+    return (
+      <ol className="flex flex-col gap-3">
+        <Step n={1}>
+          Nhấn nút <b className="text-ink">Chia sẻ</b>{' '}
+          <Share size={14} className="inline align-text-bottom" /> trên thanh Safari.
+        </Step>
+        <Step n={2}>
+          Chọn <b className="text-ink">Thêm vào MH chính</b> (Add to Home Screen).
+        </Step>
+        <Step n={3}>
+          Nhấn <b className="text-ink">Thêm</b> để tạo shortcut Agora trên màn hình chính.
+        </Step>
+      </ol>
+    )
+  }
+
+  if (platform === 'android') {
+    return (
+      <ol className="flex flex-col gap-3">
+        <Step n={1}>
+          Mở menu <MoreVertical size={14} className="inline align-text-bottom" /> của trình duyệt.
+        </Step>
+        <Step n={2}>
+          Chọn <b className="text-ink">Thêm vào Màn hình chính</b> (Add to Home screen).
+        </Step>
+        <Step n={3}>
+          Xác nhận <b className="text-ink">Thêm</b> để tạo shortcut.
+        </Step>
+      </ol>
+    )
+  }
+
+  return (
+    <ol className="flex flex-col gap-3">
+      <Step n={1}>
+        Mở menu trình duyệt trên điện thoại (biểu tượng{' '}
+        <MoreVertical size={14} className="inline align-text-bottom" /> hoặc{' '}
+        <Share size={14} className="inline align-text-bottom" />).
+      </Step>
+      <Step n={2}>
+        Chọn <b className="text-ink">Thêm vào Màn hình chính</b> / Add to Home Screen.
+      </Step>
+    </ol>
+  )
+}
+
 export function AddToHomeDialog({
   open,
   onClose,
@@ -64,56 +136,7 @@ export function AddToHomeDialog({
           </button>
         </div>
 
-        {canInstall && platform === 'android' ? (
-          <>
-            <p className="mb-4 text-[14px] text-muted">
-              Cài Agora như một ứng dụng để mở nhanh từ màn hình chính.
-            </p>
-            <button
-              onClick={onInstall}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-[15px] font-medium text-white"
-            >
-              <Plus size={17} /> Cài đặt ngay
-            </button>
-          </>
-        ) : platform === 'ios' ? (
-          <ol className="flex flex-col gap-3">
-            <Step n={1}>
-              Nhấn nút <b className="text-ink">Chia sẻ</b>{' '}
-              <Share size={14} className="inline align-text-bottom" /> trên thanh Safari.
-            </Step>
-            <Step n={2}>
-              Chọn <b className="text-ink">Thêm vào MH chính</b> (Add to Home Screen).
-            </Step>
-            <Step n={3}>
-              Nhấn <b className="text-ink">Thêm</b> để tạo shortcut Agora trên màn hình chính.
-            </Step>
-          </ol>
-        ) : platform === 'android' ? (
-          <ol className="flex flex-col gap-3">
-            <Step n={1}>
-              Mở menu <MoreVertical size={14} className="inline align-text-bottom" /> của trình
-              duyệt.
-            </Step>
-            <Step n={2}>
-              Chọn <b className="text-ink">Thêm vào Màn hình chính</b> (Add to Home screen).
-            </Step>
-            <Step n={3}>
-              Xác nhận <b className="text-ink">Thêm</b> để tạo shortcut.
-            </Step>
-          </ol>
-        ) : (
-          <ol className="flex flex-col gap-3">
-            <Step n={1}>
-              Mở menu trình duyệt trên điện thoại (biểu tượng{' '}
-              <MoreVertical size={14} className="inline align-text-bottom" /> hoặc{' '}
-              <Share size={14} className="inline align-text-bottom" />).
-            </Step>
-            <Step n={2}>
-              Chọn <b className="text-ink">Thêm vào Màn hình chính</b> / Add to Home Screen.
-            </Step>
-          </ol>
-        )}
+        <DialogBody platform={platform} canInstall={canInstall} onInstall={onInstall} />
       </div>
     </div>
   )
