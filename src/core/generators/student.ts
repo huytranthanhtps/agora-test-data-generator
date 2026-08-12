@@ -28,7 +28,8 @@ export const studentGenerator: Generator = {
         firstName: p.first,
         lastName: p.last,
         preferredName: preferredName(rng),
-        chineseName: chineseName(rng),
+        // A Chinese name only fits some students — here, Chinese-Malaysians.
+        chineseName: p.country === 'malaysia' && rng.bool(0.5) ? chineseName(rng) : '',
         gender: p.gender,
         dob,
         age: String(age),

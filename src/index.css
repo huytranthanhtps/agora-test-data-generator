@@ -8,8 +8,8 @@
    Every downstream colour reads these variables.
    ============================================================ */
 :root {
-  --font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', var(--font-ui);
+  --font-ui: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque', var(--font-ui);
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --canvas: #0f1116;
@@ -83,7 +83,10 @@ body {
   font-family: var(--font-ui);
   background: var(--canvas);
   color: var(--ink);
-  -webkit-font-smoothing: antialiased;
+  /* Let the OS use subpixel AA on non-retina (Full HD) displays — grayscale
+     `antialiased` renders text thinner and softer there. */
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
   text-rendering: optimizeLegibility;
 }
 
@@ -243,4 +246,44 @@ body {
   background: var(--accent);
   color: var(--accent-ink);
   border-bottom-right-radius: 5px;
+}
+
+/* ---- Tap-to-copy chat bubbles (Ticket) ---- */
+.rich .msg .bubble {
+  position: relative;
+  cursor: pointer;
+  transition: filter 0.15s, box-shadow 0.15s;
+}
+.rich .msg .bubble:hover {
+  filter: brightness(1.07);
+}
+.rich .msg .bubble--copied {
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+.rich .msg .bubble--copied::after {
+  content: 'Copied ✓';
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  transform: translateY(-100%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--shadow-card);
+}
+
+/* ============================================================
+   Rich preview clip — a card's rich content is capped and given a
+   soft bottom fade instead of its own scrollbar, so a card never
+   becomes a second vertical scroll region competing with the page.
+   ============================================================ */
+.rich-clip[data-fade='true'] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
 }

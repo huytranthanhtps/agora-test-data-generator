@@ -1,9 +1,6 @@
 import type { Generator } from '../types'
-import { courseDescription } from '../text'
-import { faker } from '../faker-seed'
+import { courseDescription, iconicName } from '../text'
 import { SUBJECTS, SUBJECT_TYPE, GRADES, COURSE_FOCUS } from '../data'
-
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 export const courseGenerator: Generator = {
   key: 'course',
@@ -24,20 +21,12 @@ export const courseGenerator: Generator = {
     return Array.from({ length: count }, () => {
       const sessions = rng.int(4, 12)
       const duration = rng.pick([60, 90, 120] as const)
-      // Pick the parts INSIDE the uniqueness producer so a collision re-rolls
-      // to a genuinely different name; the closure vars keep the accepted pick.
-      let subject = '',
-        grade = '',
-        focus = ''
-      const name = uniq.ensure('course.name', () => {
-        subject = rng.pick(SUBJECTS)
-        grade = rng.pick(GRADES)
-        focus = rng.pick(COURSE_FOCUS)
-        // Faker adjective lifts the combination space into the millions so a
-        // batch is unique in practice; the tracker is still the hard guarantee.
-        const base = `${grade} ${subject} — ${cap(faker.word.adjective())} ${focus}`
-        return len === 'stress' ? `${base} (Intake ${faker.number.int({ min: 1, max: 99 })})` : base
-      })
+      // Name is faker + lorem + icons; subject/grade/focus still drive the
+      // (education-flavoured) description.
+      const subject = rng.pick(SUBJECTS)
+      const grade = rng.pick(GRADES)
+      const focus = rng.pick(COURSE_FOCUS)
+      const name = uniq.ensure('course.name', () => iconicName(rng, len))
       const minAge = rng.int(4, 12)
       return {
         name,

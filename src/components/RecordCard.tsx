@@ -1,5 +1,7 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { FieldMeta, Record } from '@/core'
 import { cn } from '@/lib/cn'
+import { copyBubbleFromEvent } from '@/lib/bubble-copy'
 import { fieldCategory, categoryColorVar, initialsFrom, hueFromString } from '@/lib/field-meta'
 import { Braces, Check, Copy, Maximize2 } from 'lucide-react'
 
@@ -16,8 +18,66 @@ interface Props {
   onPreview: (html: string) => void
 }
 
+const rowAction =
+  'flex items-center gap-1.5 rounded-md border border-line bg-surface2 px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-lineStrong hover:text-ink'
+
 const htmlToPlain = (html: string) =>
   html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+
+/**
+ * Rich-content preview. Clips tall content with a soft bottom fade (no inner
+ * scrollbar, so the card never competes with the page for scroll) and offers
+ * Expand for the full view. Tapping a chat bubble copies it.
+ */
+function RichBlock({
+  html,
+  fmtId,
+  copied,
+  onCopyRich,
+  onPreview,
+}: {
+  html: string
+  fmtId: string
+  copied: boolean
+  onCopyRich: (html: string, plain: string, id: string) => void
+  onPreview: (html: string) => void
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [overflow, setOverflow] = useState(false)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (el) setOverflow(el.scrollHeight - el.clientHeight > 4)
+  }, [html])
+
+  return (
+    <>
+      <div
+        ref={ref}
+        data-fade={overflow ? 'true' : undefined}
+        onClick={copyBubbleFromEvent}
+        className="rich-clip max-h-64 overflow-hidden rounded-lg border border-line bg-surface2 p-3"
+      >
+        <div className="rich" dangerouslySetInnerHTML={{ __html: html }} />
+      </div>
+      <div className="mt-2 flex gap-2">
+        <button className={rowAction} onClick={() => onCopyRich(html, htmlToPlain(html), fmtId)}>
+          {copied ? (
+            <Check size={12} style={{ color: 'var(--accent)' }} />
+          ) : (
+            <Copy size={12} />
+          )}
+          Copy formatted
+        </button>
+        {overflow && (
+          <button className={rowAction} onClick={() => onPreview(html)}>
+            <Maximize2 size={12} /> Expand
+          </button>
+        )}
+      </div>
+    </>
+  )
+}
 
 export function RecordCard({
   row,
@@ -32,8 +92,6 @@ export function RecordCard({
   onPreview,
 }: Props) {
   const specimenId = `${entityKey.slice(0, 3).toUpperCase()}-${String(index + 1).padStart(3, '0')}`
-  const rowAction =
-    'flex items-center gap-1.5 rounded-md border border-line bg-surface2 px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-lineStrong hover:text-ink'
 
   // People entities carry first/last — show an initials chip for scannability.
   const chipName =
@@ -80,22 +138,13 @@ export function RecordCard({
                   <span className="h-[6px] w-[6px] rounded-full" style={{ background: categoryColorVar(cat) }} />
                   {f.label}
                 </dt>
-                <div className="max-h-72 overflow-auto rounded-lg border border-line bg-surface2 p-3">
-                  <div className="rich" dangerouslySetInnerHTML={{ __html: val }} />
-                </div>
-                <div className="mt-2 flex gap-2">
-                  <button className={rowAction} onClick={() => onCopyRich(val, htmlToPlain(val), fmtId)}>
-                    {copiedId === fmtId ? (
-                      <Check size={12} style={{ color: 'var(--accent)' }} />
-                    ) : (
-                      <Copy size={12} />
-                    )}
-                    Copy formatted
-                  </button>
-                  <button className={rowAction} onClick={() => onPreview(val)}>
-                    <Maximize2 size={12} /> Expand
-                  </button>
-                </div>
+                <RichBlock
+                  html={val}
+                  fmtId={fmtId}
+                  copied={copiedId === fmtId}
+                  onCopyRich={onCopyRich}
+                  onPreview={onPreview}
+                />
               </div>
             )
           }
@@ -105,7 +154,7 @@ export function RecordCard({
           return (
             <div
               key={f.key}
-              className="grid grid-cols-[100px_1fr] items-start gap-3 border-t border-line py-2 first:border-t-0"
+              className="grid grid-cols-[84px_1fr] items-start gap-3 border-t border-line py-2 first:border-t-0 sm:grid-cols-[100px_1fr]"
             >
               <dt className="flex items-start gap-1.5 pt-[3px] text-[10px] font-medium uppercase leading-[1.4] tracking-[0.1em] text-faint">
                 <span

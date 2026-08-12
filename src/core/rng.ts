@@ -31,14 +31,6 @@ export class Rng {
   pick<T>(arr: readonly T[]): T {
     return arr[Math.floor(this.next() * arr.length)]
   }
-  weighted<T>(items: readonly [T, number][]): T {
-    const total = items.reduce((s, [, w]) => s + w, 0)
-    let r = this.next() * total
-    for (const [val, w] of items) {
-      if ((r -= w) < 0) return val
-    }
-    return items[items.length - 1][0]
-  }
   shuffle<T>(arr: readonly T[]): T[] {
     const out = arr.slice()
     for (let i = out.length - 1; i > 0; i--) {

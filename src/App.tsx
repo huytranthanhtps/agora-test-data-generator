@@ -30,7 +30,7 @@ export default function App() {
   }, [g])
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-canvas font-sans text-ink">
+    <div className="flex min-h-[100dvh] flex-col bg-canvas font-sans text-ink sm:h-screen sm:overflow-hidden">
       <TopNav active={g.entityKey} onSelect={g.selectEntity} theme={theme} onToggleTheme={toggle} />
 
       <Console
@@ -49,15 +49,21 @@ export default function App() {
         fields={g.generator.fields}
       />
 
-      <p className="shrink-0 px-6 pb-1 pt-3 text-[12.5px] text-muted">
-        Click any value to copy.{' '}
-        <span className="font-medium text-ink">Update Message</span> and{' '}
-        <span className="font-medium text-ink">Ticket</span> show a formatted preview — use{' '}
-        <span className="font-medium text-ink">Copy formatted</span> to keep rich text for a WYSIWYG
-        editor. No duplicate names within a batch.
+      <p className="shrink-0 px-4 pb-1 pt-3 text-[12.5px] text-muted sm:px-6">
+        <span className="sm:hidden">
+          Tap any value to copy. On a <span className="font-medium text-ink">Ticket</span>, tap a
+          message bubble to copy it.
+        </span>
+        <span className="hidden sm:inline">
+          Click any value to copy.{' '}
+          <span className="font-medium text-ink">Update Message</span> and{' '}
+          <span className="font-medium text-ink">Ticket</span> show a formatted preview — use{' '}
+          <span className="font-medium text-ink">Copy formatted</span> to keep rich text for a
+          WYSIWYG editor, or tap a message bubble to copy it. No duplicate names within a batch.
+        </span>
       </p>
 
-      <main className="min-h-0 flex-1 overflow-y-auto px-6 pb-12 pt-3">
+      <main className="min-h-0 flex-1 px-4 pb-12 pt-3 sm:overflow-y-auto sm:overscroll-contain sm:px-6">
         {g.rows.length === 0 ? (
           <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-dashed border-lineStrong text-faint">

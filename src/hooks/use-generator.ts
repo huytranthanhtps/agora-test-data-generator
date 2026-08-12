@@ -5,7 +5,7 @@ export function useGenerator() {
   const [entityKey, setEntityKey] = useState('parent')
   const [count, setCount] = useState(3)
   const [seed, setSeed] = useState('')
-  const [len, setLen] = useState<TextLen>('normal')
+  const [len, setLen] = useState<TextLen>('long')
   const [messages, setMessages] = useState(5)
   const [rows, setRows] = useState<Record[]>([])
 

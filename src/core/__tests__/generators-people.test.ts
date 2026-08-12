@@ -21,10 +21,15 @@ describe('people generators', () => {
       expect(r.relationship).toBe(r.gender === 'male' ? 'father' : 'mother')
     }
   })
-  it('parent email carries the .agoradev tag', () => {
+  it('parent email is firstname.lastname on the mailinator domain', () => {
     seedFaker('s')
     const [r] = parentGenerator.generate({ count: 1, len: 'normal' }, ctx())
-    expect(r.email).toMatch(/\.agoradev@mailinator\.com$/)
+    expect(r.email).toMatch(/^[a-z0-9.]+@mailinator\.com$/)
+  })
+  it('parent emails are unique within a batch', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate({ count: 30, len: 'normal' }, ctx())
+    expect(new Set(rows.map((r) => r.email)).size).toBe(rows.length)
   })
   it('student age is within 4-16 and matches dob year', () => {
     seedFaker('s')

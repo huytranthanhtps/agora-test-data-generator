@@ -1,6 +1,5 @@
 import type { Generator } from '../types'
-import { productDescription } from '../text'
-import { faker } from '../faker-seed'
+import { productDescription, iconicName } from '../text'
 import {
   SUBJECTS,
   GRADES,
@@ -13,7 +12,6 @@ import {
 } from '../data'
 
 const ALNUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 export const productGenerator: Generator = {
   key: 'product',
@@ -38,23 +36,18 @@ export const productGenerator: Generator = {
       const sku = uniq.ensure('product.sku', () =>
         'AGR-' + Array.from({ length: 6 }, () => ALNUM[rng.int(0, ALNUM.length - 1)]).join(''),
       )
-      let subject = '',
-        grade = '',
-        base = '',
-        edition = ''
-      const name = uniq.ensure('product.name', () => {
-        subject = rng.pick(SUBJECTS)
-        grade = rng.pick(GRADES)
-        base = rng.pick(PRODUCT_BASES)
-        edition = rng.pick(PRODUCT_EDITIONS)
-        const nm = `${cap(faker.commerce.productAdjective())} ${subject} ${grade} ${base} — ${edition}`
-        return len === 'stress' ? `${nm} (Vol. ${faker.number.int({ min: 1, max: 9 })})` : nm
-      })
+      // Name/variant are faker + lorem + icons; subject/grade/base/edition
+      // still drive the (education-flavoured) description.
+      const subject = rng.pick(SUBJECTS)
+      const grade = rng.pick(GRADES)
+      const base = rng.pick(PRODUCT_BASES)
+      const edition = rng.pick(PRODUCT_EDITIONS)
+      const name = uniq.ensure('product.name', () => iconicName(rng, len))
       return {
         sku,
         name,
         description: productDescription(rng, { subject, grade, base, edition }, len),
-        variantName: faker.commerce.productAdjective() + ' ' + faker.commerce.product(),
+        variantName: iconicName(rng, len),
         status: rng.pick(PRODUCT_STATUS),
         productType: rng.pick(PRODUCT_TYPE),
         variantType: rng.pick(VARIANT_TYPE),

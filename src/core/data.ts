@@ -1,17 +1,6 @@
-export type Ethnicity = 'chinese' | 'malay' | 'indian' | 'eurasian'
-
-export const ETHNICITY_WEIGHTS: readonly [Ethnicity, number][] = [
-  ['chinese', 74], ['malay', 13], ['indian', 9], ['eurasian', 4],
-]
-
-export const CHINESE_SURNAMES = ['Tan', 'Lim', 'Lee', 'Ng', 'Ong', 'Wong', 'Goh', 'Chua', 'Chan', 'Koh', 'Teo', 'Ang', 'Yeo', 'Low', 'Sim'] as const
-export const CHINESE_GIVEN = ['Wei Ming', 'Jia Hui', 'Zhi Hao', 'Xin Yi', 'Jun Jie', 'Li Ying', 'Yong Sheng', 'Mei Ling', 'Kai Xin', 'Wen Qi'] as const
+// Chinese characters for a student's optional Chinese name, and playful
+// nicknames for the preferred name.
 export const CHINESE_CHARS = ['伟', '明', '嘉', '慧', '志', '豪', '欣', '怡', '俊', '杰', '丽', '颖', '永', '盛', '美', '玲'] as const
-
-export const MALAY_NAMES = ['Muhammad', 'Nur', 'Siti', 'Ahmad', 'Aisyah', 'Farhan', 'Aiman', 'Nabilah', 'Iskandar', 'Zulaikha'] as const
-export const INDIAN_NAMES = ['Kumar', 'Priya', 'Ravi', 'Anand', 'Deepa', 'Suresh', 'Lakshmi', 'Vijay', 'Meena', 'Arjun'] as const
-export const EURASIAN_SURNAMES = ['Pereira', 'De Souza', 'Rozario', 'Fernandez', 'Clarke', 'Scully', 'Theseira'] as const
-export const WESTERN_GIVEN = ['Ryan', 'Chloe', 'Ethan', 'Sophia', 'Marcus', 'Isabelle', 'Daniel', 'Grace'] as const
 export const NICKNAMES = ['Ah Boy', 'Ah Girl', 'Junior', 'Bubbles', 'Sunny', 'Lucky', 'Tiger', 'Angel'] as const
 
 export const GRADES = ['Nursery', 'K1', 'K2', 'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Secondary 1'] as const

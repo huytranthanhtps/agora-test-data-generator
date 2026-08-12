@@ -14,7 +14,7 @@ describe('names', () => {
   })
   it('email is unique on collision', () => {
     const uniq = new Uniqueness(new Rng('s'))
-    const p = { first: 'Jon', last: 'Tan', full: 'Jon Tan', gender: 'male', ethnicity: 'chinese' } as const
+    const p = { first: 'Jon', last: 'Tan', full: 'Jon Tan', gender: 'male', country: 'us' } as const
     const e1 = makeEmail(p, uniq), e2 = makeEmail(p, uniq)
     expect(e1).not.toBe(e2)
     expect(e1).toMatch(/@mailinator\.com$/)
