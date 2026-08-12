@@ -13,6 +13,13 @@
    the live site — treat it as an outward-facing action needing explicit
    approval, and make sure `npm test` + `npm run build` are green first (CI will
    fail the deploy otherwise).
+4. **Delete the branch after merge.** Once a feature branch is merged into
+   `main` (with approval per rule 2) and you've confirmed the merge landed
+   (`git branch --merged main` lists it), delete it to keep the branch list
+   clean: `git branch -d <branch>` locally — lowercase `-d` refuses an unmerged
+   branch, a built-in safety net — and `git push origin --delete <branch>` for
+   the remote. Nothing is lost: the commits live on in `main`; the branch name
+   was only a pointer.
 
 ## Commit messages
 

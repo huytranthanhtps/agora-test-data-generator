@@ -39,7 +39,7 @@ not hand-write a plan in the chat or substitute a TodoWrite list for one.
 | 6 | **Verify (GATE)** | `superpowers:verification-before-completion`: run `npm test` and `npm run build`, exercise the actual change, show **real output**. **Confirm the two app invariants still hold** — seeded reproducibility (same seed → identical batch) and no duplicates within a batch (see `docs/rules/architecture.md`). Red test / red build / broken invariant = **STOP**, fix, re-verify. Pure-docs change → state there's no runtime surface and what you checked instead. |
 | 7 | **Review** | `code-reviewer` agent (fix confirmed findings) → `code-simplifier` on the changed code. |
 | 8 | **Capture KB** | Invoke the `capture-kb` skill — harvest learnings into `docs/rules/` (diff + approval before writing). "Nothing to capture" is a valid outcome. |
-| 9 | **STOP** | Report: branch, files changed, Verify output + PASS, captured learnings. **Wait for explicit user approval before `git push` / PR / merge — pushing `main` deploys to GitHub Pages (production).** |
+| 9 | **STOP** | Report: branch, files changed, Verify output + PASS, captured learnings. **Wait for explicit user approval before `git push` / PR / merge — pushing `main` deploys to GitHub Pages (production).** **After an approved merge, delete the feature branch to keep things clean (`git branch -d`, plus remote) — see `docs/rules/git-workflow.md` rule 4.** |
 
 ## Red flags — STOP and correct
 
@@ -63,3 +63,5 @@ not hand-write a plan in the chat or substitute a TodoWrite list for one.
 - Reached for subagent-driven execution on a small, sequential plan (or forced
   everything inline on a large / parallelizable one) → pick the mode per task
   shape in Phase 5; subagents are not the default.
+- Merged an approved branch but left it dangling → delete it (Phase 9,
+  `docs/rules/git-workflow.md` rule 4).
