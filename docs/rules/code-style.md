@@ -8,6 +8,9 @@
   them, don't `// eslint-disable` them away.
 - `isolatedModules` is on — use `import type { … }` for type-only imports (the
   codebase already does, e.g. `import type { Generator } from '../types'`).
+- Using `import.meta.env` (`PROD`, `BASE_URL`, …) requires `src/vite-env.d.ts`
+  with `/// <reference types="vite/client" />`; without it `tsc -b` fails with
+  "Property 'env' does not exist on type 'ImportMeta'".
 - **Path alias** `@/*` → `src/*`. Use it for cross-directory imports
   (`@/core/registry`); relative imports are fine within the same folder.
 - **Tailwind** for styling; the typography plugin is available (`@tailwindcss/

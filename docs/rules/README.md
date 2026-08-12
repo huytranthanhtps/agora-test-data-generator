@@ -41,3 +41,4 @@ task (Phase 1) so known gotchas are not repeated.
 | [code-style.md](code-style.md) | React 19 / TS-strict / Tailwind / faker conventions + reuse-first |
 | [testing.md](testing.md) | Vitest + Testing Library conventions; the determinism test pattern |
 | [git-workflow.md](git-workflow.md) | Branch-first, no auto-push; pushing `main` deploys to GitHub Pages |
+| [pwa.md](pwa.md) | Home-screen shortcut / installability: platform limits, manifest+SW wiring, icon generation |

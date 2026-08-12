@@ -35,7 +35,7 @@ not hand-write a plan in the chat or substitute a TodoWrite list for one.
 | 2 | **Explore** | Read the affected code (`src/core`, `src/core/generators`, `src/components`, `src/export`, …). Read-only — no branch yet. |
 | 3 | **Branch** | **Branch-first — never work on `main`.** Cut a feature branch. Never auto-commit/push. |
 | 4 | **Plan** | superpowers spine, mandatory. Feature with open design questions → `superpowers:brainstorming` (spec → `docs/superpowers/specs/`). Bug → `superpowers:systematic-debugging` (root cause first). Then **always** `superpowers:writing-plans`. Never plan inline. |
-| 5 | **Implement** | `superpowers:test-driven-development`. Local commits on the branch allowed; **never push**. |
+| 5 | **Implement** | `superpowers:test-driven-development`. **Choose the execution mode by task shape — don't default to subagents.** Inline (`superpowers:executing-plans`) fits a small plan whose tasks are sequential / interdependent (each needs the previous one's code) or that runs local tooling you want to watch. Subagent-driven (`superpowers:subagent-driven-development`) pays off on a large plan (≈10+ tasks), genuinely independent / parallelizable tasks, or when the main context must stay lean. Local commits on the branch allowed; **never push**. |
 | 6 | **Verify (GATE)** | `superpowers:verification-before-completion`: run `npm test` and `npm run build`, exercise the actual change, show **real output**. **Confirm the two app invariants still hold** — seeded reproducibility (same seed → identical batch) and no duplicates within a batch (see `docs/rules/architecture.md`). Red test / red build / broken invariant = **STOP**, fix, re-verify. Pure-docs change → state there's no runtime surface and what you checked instead. |
 | 7 | **Review** | `code-reviewer` agent (fix confirmed findings) → `code-simplifier` on the changed code. |
 | 8 | **Capture KB** | Invoke the `capture-kb` skill — harvest learnings into `docs/rules/` (diff + approval before writing). "Nothing to capture" is a valid outcome. |
@@ -60,3 +60,6 @@ not hand-write a plan in the chat or substitute a TodoWrite list for one.
 - A referenced spine skill seemed missing so a phase was skipped → attempt the
   invocation first; only after it actually fails, do that phase's intent
   manually and record the gap in the final report.
+- Reached for subagent-driven execution on a small, sequential plan (or forced
+  everything inline on a large / parallelizable one) → pick the mode per task
+  shape in Phase 5; subagents are not the default.
