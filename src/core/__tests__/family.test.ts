@@ -2,14 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { Rng } from '@/core/rng'
 import { Uniqueness } from '@/core/uniqueness'
 import { seedFaker } from '@/core/faker-seed'
-import {
-  makeChildren,
-  makeGuardians,
-  childrenHtml,
-  guardiansHtml,
-  type Child,
-  type Guardian,
-} from '@/core/generators/family'
+import { makeChildren, makeGuardians } from '@/core/generators/family'
 
 function rng() { return new Rng('s') }
 function uniq() { return new Uniqueness(new Rng('s')) }
@@ -47,30 +40,12 @@ describe('family', () => {
     }
   })
 
-  it('childrenHtml renders each child as a list item with its name and count', () => {
-    const kids: Child[] = [{
-      firstName: 'Amy', lastName: 'Tan', preferredName: 'Sunny', chineseName: '',
-      gender: 'female', dob: '01/01/2018', age: '8', gradeLevel: 'K2',
-      allergies: 'nuts', email: 'amy.tan@maildrop.cc',
-    }]
-    const html = childrenHtml(kids)
-    expect(html).toContain('<li>')
-    expect(html).toContain('Amy Tan')
-    expect(html).toContain('Children (1)')
-  })
-
-  it('guardiansHtml notes when there are no guardians', () => {
-    expect(guardiansHtml([])).toMatch(/no additional guardians/i)
-  })
-
-  it('guardiansHtml lists each guardian with relationship', () => {
-    const gs: Guardian[] = [{
-      firstName: 'Bo', lastName: 'Lim', fullName: 'Bo Lim', gender: 'male',
-      relationship: 'Uncle', mobile: '9123 4567', email: 'bo.lim@maildrop.cc',
-    }]
-    const html = guardiansHtml(gs)
-    expect(html).toContain('Bo Lim')
-    expect(html).toContain('Uncle')
-    expect(html).toContain('Guardians (1)')
+  it('each guardian carries a full name and a maildrop.cc email', () => {
+    seedFaker('s')
+    const gs = makeGuardians(rng(), uniq())
+    for (const g of gs) {
+      expect(g.fullName).toBe(`${g.firstName} ${g.lastName}`)
+      expect(g.email).toMatch(/@maildrop\.cc$/)
+    }
   })
 })

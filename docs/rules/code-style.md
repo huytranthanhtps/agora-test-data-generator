@@ -45,9 +45,19 @@ copy-paste-tweak.
   **h1–h3** (NOT h4), `p`, `ul`/`ol`/`li`, `strong`, `em`, `a`, and the
   `.chat`/`.msg` classes. Author nested content with those tags — an `<h4>`
   renders unstyled (browser default).
-- Put nested sub-entity rendering in its own module, not inline in the generator
-  — e.g. Parent's `children`/`guardians` blocks live in
-  `src/core/generators/family.ts`, which builds the records and emits their HTML.
+## Nested member fields (children / guardians)
+
+- Sub-entities that need **per-field click-to-copy** (Parent's children /
+  guardians) are NOT HTML blocks. They are structured `MemberRecord[]` values on
+  the parent row, described by `FieldMeta.members` (`{ refPrefix, nameKeys,
+  badgeKey?, fields }`) and rendered by `RecordCard`'s `MemberList` (each member
+  a sub-card, each sub-field a copyable `CopyRow`). `src/core/generators/family.ts`
+  builds the records; it does not emit HTML.
+- **Type, not interface, for row/member shapes.** A record shape must stay
+  assignable to the index-signature `Record`/`MemberRecord` (`{ [k]: FieldValue }`).
+  A TS `interface` has NO implicit index signature and fails that assignment; a
+  `type` alias of an object literal does. So `Child`/`Guardian` and the parent's
+  `ParentRow` are `type` aliases — declaring them as `interface` breaks the build.
 
 ## Misc
 

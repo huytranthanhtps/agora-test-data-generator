@@ -30,25 +30,30 @@ describe('people generators', () => {
     const rows = parentGenerator.generate({ count: 30, len: 'normal' }, ctx())
     expect(new Set(rows.map((r) => r.email)).size).toBe(rows.length)
   })
-  it('parent exposes children and guardians as nested html fields', () => {
-    const htmlKeys = parentGenerator.fields.filter((f) => f.html).map((f) => f.key)
-    expect(htmlKeys).toContain('children')
-    expect(htmlKeys).toContain('guardians')
+  it('parent exposes children and guardians as member fields', () => {
+    const memberKeys = parentGenerator.fields.filter((f) => f.members).map((f) => f.key)
+    expect(memberKeys).toContain('children')
+    expect(memberKeys).toContain('guardians')
   })
-  it('each parent record embeds a children block inheriting the parent surname', () => {
+  it('each parent has 1-3 children, all inheriting the parent surname', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 10, len: 'normal' }, ctx())
     for (const r of rows) {
-      expect(r.children).toContain('Children (')
-      expect(r.children).toContain(r.lastName)
+      expect(r.children.length).toBeGreaterThanOrEqual(1)
+      expect(r.children.length).toBeLessThanOrEqual(3)
+      for (const c of r.children) expect(c.lastName).toBe(r.lastName)
+      expect(r.guardians.length).toBeGreaterThanOrEqual(0)
+      expect(r.guardians.length).toBeLessThanOrEqual(2)
     }
   })
   it('no email is duplicated across parents, children and guardians in a batch', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 15, len: 'normal' }, ctx())
-    const emails = rows.flatMap((r) =>
-      `${r.email} ${r.children} ${r.guardians}`.match(/[a-z0-9.]+@maildrop\.cc/g) ?? [],
-    )
+    const emails = rows.flatMap((r) => [
+      r.email,
+      ...r.children.map((c) => c.email),
+      ...r.guardians.map((g) => g.email),
+    ])
     expect(emails.length).toBeGreaterThan(15)
     expect(new Set(emails).size).toBe(emails.length)
   })
