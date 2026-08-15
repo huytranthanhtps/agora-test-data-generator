@@ -38,6 +38,17 @@ Before adding a new helper, check for an existing one:
 If a helper almost fits, extend it (add a param / sibling export) rather than
 copy-paste-tweak.
 
+## Rich HTML fields (`html: true`)
+
+- A `html: true` field renders its string via `dangerouslySetInnerHTML` inside a
+  `.rich` container (`RecordCard`). `.rich` (`src/index.css`) styles only
+  **h1–h3** (NOT h4), `p`, `ul`/`ol`/`li`, `strong`, `em`, `a`, and the
+  `.chat`/`.msg` classes. Author nested content with those tags — an `<h4>`
+  renders unstyled (browser default).
+- Put nested sub-entity rendering in its own module, not inline in the generator
+  — e.g. Parent's `children`/`guardians` blocks live in
+  `src/core/generators/family.ts`, which builds the records and emits their HTML.
+
 ## Misc
 
 - No `console.log` in committed code.

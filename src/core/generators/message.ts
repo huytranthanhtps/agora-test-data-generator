@@ -5,7 +5,7 @@ import { SEND_TO } from '../data'
 export const messageGenerator: Generator = {
   key: 'message',
   label: 'Update Message',
-  shortcut: 7,
+  shortcut: 6,
   fields: [
     { key: 'title', label: 'Title' },
     { key: 'message', label: 'Message', html: true },

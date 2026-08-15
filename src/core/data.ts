@@ -4,6 +4,14 @@ export const CHINESE_CHARS = ['伟', '明', '嘉', '慧', '志', '豪', '欣', '
 export const NICKNAMES = ['Ah Boy', 'Ah Girl', 'Junior', 'Bubbles', 'Sunny', 'Lucky', 'Tiger', 'Angel'] as const
 
 export const GRADES = ['Nursery', 'K1', 'K2', 'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Secondary 1'] as const
+
+// A guardian is a non-parent relative or trusted contact for the children.
+// Relationships are grouped by gender so an emitted guardian stays consistent
+// (a "Grandfather" is never female); "Family Friend" fits either gender.
+export const GUARDIAN_RELATIONSHIPS = {
+  male: ['Grandfather', 'Uncle', 'Family Friend'],
+  female: ['Grandmother', 'Aunt', 'Family Friend'],
+} as const
 export const SUBJECTS = ['Mathematics', 'English', 'Science', 'Chinese', 'Malay', 'Tamil', 'Physics', 'Chemistry', 'Biology', 'Coding'] as const
 export const LEVELS = ['Foundation', 'Standard', 'Advanced', 'Olympiad'] as const
 export const SUBJECT_TYPE = ['Academic', 'Enrichment', 'Language', 'STEM'] as const
@@ -22,4 +30,4 @@ export const COURSE_FOCUS = ['Problem Solving', 'Exam Prep', 'Foundations', 'Con
 export const PRODUCT_EDITIONS = ['2026 Edition', 'Revised Edition', 'Deluxe Set', 'Starter Pack', 'Complete Bundle', 'Digital Access', 'Practice Companion'] as const
 
 export const DEV_MARKER = '[DEV]'
-export const EMAIL_DOMAIN = 'mailinator.com'
+export const EMAIL_DOMAIN = 'maildrop.cc'

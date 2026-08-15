@@ -5,7 +5,7 @@ import { SUBJECTS, SUBJECT_TYPE, GRADES, COURSE_FOCUS } from '../data'
 export const courseGenerator: Generator = {
   key: 'course',
   label: 'Course',
-  shortcut: 3,
+  shortcut: 2,
   fields: [
     { key: 'name', label: 'Name' },
     { key: 'description', label: 'Description' },

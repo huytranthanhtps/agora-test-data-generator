@@ -6,7 +6,7 @@ import { SUBJECTS, LEVELS, BUSINESS_UNITS, VENUES, PROGRAMMES } from '../data'
 export const klassGenerator: Generator = {
   key: 'klass',
   label: 'Class',
-  shortcut: 5,
+  shortcut: 4,
   fields: [
     { key: 'className', label: 'Class name' },
     { key: 'businessUnit', label: 'Business unit' },
