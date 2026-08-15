@@ -49,13 +49,13 @@ export function makeChildren(
   return Array.from({ length: n }, () => {
     const p = makePerson(rng)
     const { dob, age } = dobForAge(rng, 4, 16)
-    // A Chinese name only fits some children — here, Chinese-Malaysians.
-    const cn = p.country === 'malaysia' && rng.bool(0.5) ? chineseName(rng) : ''
+    // A Chinese name only fits Chinese-Singaporean children.
+    const cn = p.ethnicity === 'chinese' && rng.bool(0.5) ? chineseName(rng) : ''
     const nick = preferredName(rng)
     const grade = rng.pick(GRADES)
     const allergies = len === 'normal' ? faker.lorem.words(2) : loremByLen(rng, len)
     const email = makeEmail(
-      { first: p.first, last: parentLast, full: `${p.first} ${parentLast}`, gender: p.gender, country: p.country },
+      { first: p.first, last: parentLast, full: `${p.first} ${parentLast}`, gender: p.gender, ethnicity: p.ethnicity },
       uniq,
     )
     return {

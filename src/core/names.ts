@@ -3,35 +3,29 @@ import { Uniqueness } from './uniqueness'
 import { LOCALE_FAKERS } from './faker-seed'
 import { CHINESE_CHARS, NICKNAMES, EMAIL_DOMAIN } from './data'
 
-export const COUNTRIES = ['us', 'uk', 'malaysia', 'vietnam'] as const
-export type Country = (typeof COUNTRIES)[number]
+// Singapore's main ethnic groups; each maps to a Latin-romanising faker locale
+// (see faker-seed.ts LOCALE_FAKERS).
+export const ETHNICITIES = ['chinese', 'malay', 'indian', 'eurasian'] as const
+export type Ethnicity = (typeof ETHNICITIES)[number]
 
 export interface Person {
   first: string; last: string; full: string
-  gender: 'male' | 'female'; country: Country
+  gender: 'male' | 'female'; ethnicity: Ethnicity
 }
 
-// Vietnamese faker names are Latin but carry diacritics; strip them to a plain
-// ASCII romanisation (đ/Đ have no combining-mark decomposition, so map them).
-const stripDiacritics = (s: string): string =>
-  s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
-
 /**
- * A person from one of several countries, names sourced from faker's locale
- * data. Korea/China are intentionally excluded — faker only emits native
- * script for them and cannot romanise. Vietnamese is romanised to ASCII.
+ * A person drawn from Singapore's main ethnic groups, names sourced from
+ * Latin-romanising faker locales. Native-script locales (Chinese/Tamil) are
+ * intentionally avoided so every name stays ASCII-friendly; a Chinese person's
+ * CJK name is added separately (see `chineseName`).
  */
 export function makePerson(rng: Rng): Person {
-  const country = rng.pick(COUNTRIES)
+  const ethnicity = rng.pick(ETHNICITIES)
   const gender: 'male' | 'female' = rng.bool() ? 'male' : 'female'
-  const f = LOCALE_FAKERS[country]
-  let first = f.person.firstName(gender)
-  let last = f.person.lastName()
-  if (country === 'vietnam') {
-    first = stripDiacritics(first)
-    last = stripDiacritics(last)
-  }
-  return { first, last, full: `${first} ${last}`, gender, country }
+  const f = LOCALE_FAKERS[ethnicity]
+  const first = f.person.firstName(gender)
+  const last = f.person.lastName()
+  return { first, last, full: `${first} ${last}`, gender, ethnicity }
 }
 
 export function chineseName(rng: Rng): string {
