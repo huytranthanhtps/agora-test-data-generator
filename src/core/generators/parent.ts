@@ -35,7 +35,8 @@ const CHILD_FIELDS: FieldMeta[] = [
 ]
 
 const GUARDIAN_FIELDS: FieldMeta[] = [
-  { key: 'fullName', label: 'Full name' },
+  { key: 'firstName', label: 'First name' },
+  { key: 'lastName', label: 'Last name' },
   { key: 'relationship', label: 'Relationship' },
   { key: 'gender', label: 'Gender' },
   { key: 'mobile', label: 'Mobile' },
@@ -57,7 +58,7 @@ export const parentGenerator: Generator<ParentRow> = {
     { key: 'address', label: 'Address' },
     { key: 'postcode', label: 'Postcode' },
     { key: 'children', label: 'Children', members: { refPrefix: 'CHD', nameKeys: ['firstName', 'lastName'], fields: CHILD_FIELDS } },
-    { key: 'guardians', label: 'Guardians', members: { refPrefix: 'GRD', nameKeys: ['fullName'], badgeKey: 'relationship', fields: GUARDIAN_FIELDS } },
+    { key: 'guardians', label: 'Guardians', members: { refPrefix: 'GRD', nameKeys: ['firstName', 'lastName'], badgeKey: 'relationship', fields: GUARDIAN_FIELDS } },
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {

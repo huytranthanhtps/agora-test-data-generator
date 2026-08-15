@@ -31,7 +31,6 @@ export type Child = {
 export type Guardian = {
   firstName: string
   lastName: string
-  fullName: string
   gender: 'male' | 'female'
   relationship: string
   mobile: string
@@ -81,7 +80,6 @@ export function makeGuardians(rng: Rng, uniq: Uniqueness): Guardian[] {
     return {
       firstName: p.first,
       lastName: p.last,
-      fullName: p.full,
       gender: p.gender,
       relationship: rng.pick(GUARDIAN_RELATIONSHIPS[p.gender]),
       mobile: sgMobile(rng),
