@@ -53,10 +53,8 @@ export function makeChildren(
     const nick = preferredName(rng)
     const grade = rng.pick(GRADES)
     const allergies = len === 'normal' ? faker.lorem.words(2) : loremByLen(rng, len)
-    const email = makeEmail(
-      { first: p.first, last: parentLast, full: `${p.first} ${parentLast}`, gender: p.gender, ethnicity: p.ethnicity },
-      uniq,
-    )
+    // Same person, but the email uses the parent's surname the child inherits.
+    const email = makeEmail({ ...p, last: parentLast, full: `${p.first} ${parentLast}` }, uniq)
     return {
       firstName: p.first,
       lastName: parentLast,
