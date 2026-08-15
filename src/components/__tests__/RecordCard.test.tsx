@@ -23,7 +23,7 @@ const fields: FieldMeta[] = [
 const row: Record = {
   firstName: 'Quyet',
   lastName: 'Pham',
-  children: [{ firstName: 'Amy', email: 'amy.pham@maildrop.cc' }],
+  children: [{ firstName: 'Amy', email: 'amy.pham@mailinator.com' }],
 }
 
 const base = {
@@ -40,9 +40,9 @@ describe('RecordCard members', () => {
   it('renders each nested child field as a copyable value', () => {
     const onCopy = vi.fn()
     render(<RecordCard {...base} row={row} fields={fields} onCopy={onCopy} />)
-    const btn = screen.getByRole('button', { name: /amy\.pham@maildrop\.cc/ })
+    const btn = screen.getByRole('button', { name: /amy\.pham@mailinator\.com/ })
     fireEvent.click(btn)
-    expect(onCopy).toHaveBeenCalledWith('amy.pham@maildrop.cc', expect.any(String))
+    expect(onCopy).toHaveBeenCalledWith('amy.pham@mailinator.com', expect.any(String))
   })
 
   it('shows a ref tag for each member', () => {

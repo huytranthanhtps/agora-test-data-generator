@@ -19,10 +19,10 @@ describe('family', () => {
     }
   })
 
-  it('child email is firstname.lastname on the maildrop.cc domain', () => {
+  it('child email is firstname.lastname on the mailinator.com domain', () => {
     seedFaker('s')
     const kids = makeChildren(rng(), uniq(), 'Tan', 'normal')
-    for (const k of kids) expect(k.email).toMatch(/^[a-z0-9.]+@maildrop\.cc$/)
+    for (const k of kids) expect(k.email).toMatch(/^[a-z0-9.]+@mailinator\.com$/)
   })
 
   it('makeGuardians yields 0-2 guardians with gender-consistent relationships', () => {
@@ -40,12 +40,12 @@ describe('family', () => {
     }
   })
 
-  it('each guardian carries a full name and a maildrop.cc email', () => {
+  it('each guardian carries a full name and a mailinator.com email', () => {
     seedFaker('s')
     const gs = makeGuardians(rng(), uniq())
     for (const g of gs) {
       expect(g.fullName).toBe(`${g.firstName} ${g.lastName}`)
-      expect(g.email).toMatch(/@maildrop\.cc$/)
+      expect(g.email).toMatch(/@mailinator\.com$/)
     }
   })
 })

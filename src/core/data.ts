@@ -30,4 +30,4 @@ export const COURSE_FOCUS = ['Problem Solving', 'Exam Prep', 'Foundations', 'Con
 export const PRODUCT_EDITIONS = ['2026 Edition', 'Revised Edition', 'Deluxe Set', 'Starter Pack', 'Complete Bundle', 'Digital Access', 'Practice Companion'] as const
 
 export const DEV_MARKER = '[DEV]'
-export const EMAIL_DOMAIN = 'maildrop.cc'
+export const EMAIL_DOMAIN = 'mailinator.com'
