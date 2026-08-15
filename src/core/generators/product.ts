@@ -16,7 +16,7 @@ const ALNUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 export const productGenerator: Generator = {
   key: 'product',
   label: 'Product',
-  shortcut: 6,
+  shortcut: 5,
   fields: [
     { key: 'sku', label: 'SKU' },
     { key: 'name', label: 'Name' },

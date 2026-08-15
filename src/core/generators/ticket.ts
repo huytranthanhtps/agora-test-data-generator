@@ -9,7 +9,7 @@ const LEN_BUBBLES: Record<TextLen, number> = { normal: 1, long: 2, stress: 3 }
 export const ticketGenerator: Generator = {
   key: 'ticket',
   label: 'Ticket',
-  shortcut: 8,
+  shortcut: 7,
   fields: [
     { key: 'subject', label: 'Subject' },
     { key: 'participantA', label: 'Participant A' },

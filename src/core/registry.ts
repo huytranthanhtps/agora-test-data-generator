@@ -3,7 +3,6 @@ import { Rng } from './rng'
 import { Uniqueness } from './uniqueness'
 import { seedFaker } from './faker-seed'
 import { parentGenerator } from './generators/parent'
-import { studentGenerator } from './generators/student'
 import { courseGenerator } from './generators/course'
 import { instanceGenerator } from './generators/instance'
 import { klassGenerator } from './generators/klass'
@@ -12,7 +11,7 @@ import { messageGenerator } from './generators/message'
 import { ticketGenerator } from './generators/ticket'
 
 export const GENERATORS: Generator[] = [
-  parentGenerator, studentGenerator, courseGenerator, instanceGenerator,
+  parentGenerator, courseGenerator, instanceGenerator,
   klassGenerator, productGenerator, messageGenerator, ticketGenerator,
 ].sort((a, b) => a.shortcut - b.shortcut)
 

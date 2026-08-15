@@ -7,7 +7,7 @@ const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 export const instanceGenerator: Generator = {
   key: 'instance',
   label: 'Course Instance',
-  shortcut: 4,
+  shortcut: 3,
   fields: [
     { key: 'courseCode', label: 'Course code' },
     { key: 'startDate', label: 'Start date' },

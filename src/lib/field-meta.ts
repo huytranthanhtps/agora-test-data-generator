@@ -12,7 +12,7 @@ export type FieldCategory =
   | 'text'
 
 const RULES: [FieldCategory, RegExp][] = [
-  ['rich', /^(message|conversation)$/],
+  ['rich', /^(message|conversation|children|guardians)$/],
   ['contact', /email|mobile|phone/],
   ['temporal', /date|dob|start|end|period/],
   ['numeric', /age|price|min|max|session|duration|seat|count|messages|qty/],
