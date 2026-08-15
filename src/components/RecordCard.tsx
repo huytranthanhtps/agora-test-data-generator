@@ -26,6 +26,27 @@ const asStr = (v: FieldValue | undefined): string => (typeof v === 'string' ? v 
 const htmlToPlain = (html: string) =>
   html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 
+/** Section heading (member lists / rich blocks): a coloured dot, a label, and an optional count. */
+function SectionHeader({
+  label,
+  colorVar,
+  count,
+}: {
+  label: string
+  colorVar: string
+  count?: number
+}) {
+  return (
+    <dt className="mb-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
+      <span className="h-[6px] w-[6px] rounded-full" style={{ background: colorVar }} />
+      {label}
+      {count !== undefined && (
+        <span className="font-mono text-[10px] normal-case tracking-normal text-faint">({count})</span>
+      )}
+    </dt>
+  )
+}
+
 /** A single label + copyable value line, shared by parent fields and members. */
 function CopyRow({
   fieldKey,
@@ -96,11 +117,7 @@ function MemberList({
   const spec = field.members!
   return (
     <div className="border-t border-line py-3 first:border-t-0">
-      <dt className="mb-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
-        <span className="h-[6px] w-[6px] rounded-full" style={{ background: categoryColorVar('rich') }} />
-        {field.label}
-        <span className="font-mono text-[10px] normal-case tracking-normal text-faint">({members.length})</span>
-      </dt>
+      <SectionHeader label={field.label} colorVar={categoryColorVar('rich')} count={members.length} />
 
       {members.length === 0 ? (
         <p className="px-0.5 text-[12.5px] italic text-faint">None.</p>
@@ -277,10 +294,7 @@ export function RecordCard({
             const fmtId = `${index}:${f.key}:fmt`
             return (
               <div key={f.key} className="border-t border-line py-3 first:border-t-0">
-                <dt className="mb-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
-                  <span className="h-[6px] w-[6px] rounded-full" style={{ background: categoryColorVar(fieldCategory(f.key)) }} />
-                  {f.label}
-                </dt>
+                <SectionHeader label={f.label} colorVar={categoryColorVar(fieldCategory(f.key))} />
                 <RichBlock
                   html={asStr(row[f.key])}
                   fmtId={fmtId}
