@@ -40,11 +40,13 @@ describe('family', () => {
     }
   })
 
-  it('each guardian carries a full name and a mailinator.com email', () => {
+  it('each guardian has separate first and last names on the mailinator.com domain', () => {
     seedFaker('s')
     const gs = makeGuardians(rng(), uniq())
     for (const g of gs) {
-      expect(g.fullName).toBe(`${g.firstName} ${g.lastName}`)
+      expect(g.firstName).toBeTruthy()
+      expect(g.lastName).toBeTruthy()
+      expect('fullName' in g).toBe(false)
       expect(g.email).toMatch(/@mailinator\.com$/)
     }
   })

@@ -31,10 +31,14 @@ random (`Rng` falls back to `Math.random()*2**32`, `faker.seed()` resets).
   sample`) and from the seeded `faker` (`src/core/faker-seed.ts`).
 - **Never** call bare `Math.random()`, `Date.now()`, or an unseeded source in a
   generator — it silently breaks reproducibility for a given seed.
-- Multi-country names: use `LOCALE_FAKERS` (us / uk / malaysia=`ID_ID` /
-  vietnam). Each locale is seeded at `s + i + 1` so locales don't emit
+- Multi-ethnic names: use `LOCALE_FAKERS`, keyed by Singapore ethnicity —
+  `chinese`=`EN_HK` (romanised Chinese surnames), `malay`=`ID_ID`,
+  `indian`=`EN_IN`, `eurasian`=`EN_GB`. Keys MUST match `ETHNICITIES`
+  (`names.ts`). Each locale is seeded at `s + i + 1` so locales don't emit
   correlated sequences while staying reproducible — keep that offset if you add
-  a locale.
+  one. Only add **Latin-romanising** locales (native-script ones like `zh_*` /
+  `ta_IN` are avoided); and verify a candidate actually ships person data —
+  some (e.g. `ta_IN`) silently fall back to generic English names.
 
 ### 2. No duplicates within a batch
 

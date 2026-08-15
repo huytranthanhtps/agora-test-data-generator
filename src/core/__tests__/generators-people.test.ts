@@ -13,6 +13,15 @@ describe('people generators', () => {
     const emails = rows.map(r => r.email)
     expect(new Set(emails).size).toBe(emails.length)
   })
+  it('every parent and guardian mobile is a Singapore number', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate({ count: 20, len: 'normal' }, ctx())
+    const sg = /^[89]\d{3} \d{4}$/
+    for (const r of rows) {
+      expect(r.mobile).toMatch(sg)
+      for (const g of r.guardians) expect(g.mobile).toMatch(sg)
+    }
+  })
   it('parent relationship matches gender', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 20, len: 'normal' }, ctx())

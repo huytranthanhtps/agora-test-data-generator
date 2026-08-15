@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { Rng } from '@/core/rng'
 import { Uniqueness } from '@/core/uniqueness'
-import { makePerson, makeEmail, sgMobile, sgPostcode, chineseName } from '@/core/names'
+import { makePerson, makeEmail, sgMobile, sgPostcode, chineseName, ETHNICITIES } from '@/core/names'
 
 describe('names', () => {
   it('mobile matches SG format', () => {
@@ -14,7 +14,7 @@ describe('names', () => {
   })
   it('email is unique on collision', () => {
     const uniq = new Uniqueness(new Rng('s'))
-    const p = { first: 'Jon', last: 'Tan', full: 'Jon Tan', gender: 'male', country: 'us' } as const
+    const p = { first: 'Jon', last: 'Tan', full: 'Jon Tan', gender: 'male', ethnicity: 'chinese' } as const
     const e1 = makeEmail(p, uniq), e2 = makeEmail(p, uniq)
     expect(e1).not.toBe(e2)
     expect(e1).toMatch(/@mailinator\.com$/)
@@ -26,5 +26,9 @@ describe('names', () => {
   it('makePerson full = first + last', () => {
     const p = makePerson(new Rng('s'))
     expect(p.full).toBe(`${p.first} ${p.last}`)
+  })
+  it('makePerson ethnicity is one of the Singapore ethnicities', () => {
+    const p = makePerson(new Rng('s'))
+    expect(ETHNICITIES).toContain(p.ethnicity)
   })
 })

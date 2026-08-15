@@ -1,16 +1,19 @@
-import { faker, fakerEN_US, fakerEN_GB, fakerID_ID, fakerVI } from '@faker-js/faker'
+import { faker, fakerEN_GB, fakerEN_HK, fakerEN_IN, fakerID_ID } from '@faker-js/faker'
 import { hashSeed } from './rng'
 
 export { faker }
 
-// Locale-specific faker instances used for multi-country person names.
-// Malaysia has no faker locale, so Indonesian (ID_ID) stands in — Malay and
-// Indonesian names are both Latin and closely related.
+// Agora runs in Singapore, so person names are drawn from its main ethnic
+// groups. faker has no en_SG locale, so each ethnicity maps to a Latin-
+// romanising stand-in: EN_HK gives romanised Chinese surnames (Lam/Mak/Cheng),
+// ID_ID Malay/Indonesian names, EN_IN romanised Indian names, EN_GB English
+// (Eurasian/expat). Native-script locales (zh_*, ta_IN) are avoided so every
+// name stays ASCII-friendly.
 export const LOCALE_FAKERS = {
-  us: fakerEN_US,
-  uk: fakerEN_GB,
-  malaysia: fakerID_ID,
-  vietnam: fakerVI,
+  chinese: fakerEN_HK,
+  malay: fakerID_ID,
+  indian: fakerEN_IN,
+  eurasian: fakerEN_GB,
 } as const
 
 export function seedFaker(seed?: string): void {
