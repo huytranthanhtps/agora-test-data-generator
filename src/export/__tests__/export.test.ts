@@ -18,4 +18,13 @@ describe('export', () => {
     const csv = toCSV([{ a: 'he said "hi"', b: 'z' }], fields)
     expect(csv.split('\n')[1]).toBe('"he said ""hi""",z')
   })
+  it('toCSV serialises member-array cells as JSON', () => {
+    const memberFields = [
+      { key: 'a', label: 'A' },
+      { key: 'kids', label: 'Kids' },
+    ]
+    const csv = toCSV([{ a: '1', kids: [{ n: 'x' }] }], memberFields)
+    const json = JSON.stringify([{ n: 'x' }])
+    expect(csv.split('\n')[1]).toBe(`1,"${json.replace(/"/g, '""')}"`)
+  })
 })
