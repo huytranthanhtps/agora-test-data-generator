@@ -8,11 +8,14 @@ import { faker } from '../faker-seed'
 import { GRADES, GUARDIAN_RELATIONSHIPS } from '../data'
 
 // A parent's household: 1–3 children (who share the parent's surname) and
-// 0–2 guardians (non-parent relatives / trusted contacts). Both are rendered
-// as nested HTML blocks inside the parent record — the merged Child data lives
-// here rather than in a standalone generator.
+// 0–2 guardians (non-parent relatives / trusted contacts). Both are returned as
+// structured records nested inside the parent record — the merged Child data
+// lives here rather than in a standalone generator.
+//
+// Child/Guardian are `type` aliases (not interfaces) so they carry an implicit
+// index signature and stay assignable to `MemberRecord` (`{ [k]: string }`).
 
-export interface Child {
+export type Child = {
   firstName: string
   lastName: string
   preferredName: string
@@ -25,7 +28,7 @@ export interface Child {
   email: string
 }
 
-export interface Guardian {
+export type Guardian = {
   firstName: string
   lastName: string
   fullName: string
@@ -85,43 +88,4 @@ export function makeGuardians(rng: Rng, uniq: Uniqueness): Guardian[] {
       email: makeEmail(p, uniq),
     }
   })
-}
-
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-
-const esc = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
-/** One roster entry: a bold name, a middot-joined facts line, and a meta line. */
-function personLi(name: string, facts: string, meta: string): string {
-  return `<li><strong>${esc(name)}</strong> — ${esc(facts)}<br><span class="meta">${esc(meta)}</span></li>`
-}
-
-/** The shared card wrapper for both children and guardians. */
-function familyBlock(heading: string, count: number, body: string): string {
-  return `<div class="family"><h3>${heading} (${count})</h3>${body}</div>`
-}
-
-function childItem(c: Child): string {
-  const name = c.chineseName ? `${c.firstName} ${c.lastName} (${c.chineseName})` : `${c.firstName} ${c.lastName}`
-  const facts = [cap(c.gender), `DOB ${c.dob}`, `age ${c.age}`, c.gradeLevel, `“${c.preferredName}”`].join(' · ')
-  return personLi(name, facts, `${c.email} · allergies: ${c.allergies}`)
-}
-
-export function childrenHtml(children: Child[]): string {
-  const items = children.map(childItem).join('')
-  return familyBlock('🧒 Children', children.length, `<ul>${items}</ul>`)
-}
-
-function guardianItem(g: Guardian): string {
-  const facts = [g.relationship, cap(g.gender), g.mobile].join(' · ')
-  return personLi(g.fullName, facts, g.email)
-}
-
-export function guardiansHtml(guardians: Guardian[]): string {
-  const body =
-    guardians.length === 0
-      ? '<p><em>No additional guardians.</em></p>'
-      : `<ul>${guardians.map(guardianItem).join('')}</ul>`
-  return familyBlock('🧑‍🤝‍🧑 Guardians', guardians.length, body)
 }
