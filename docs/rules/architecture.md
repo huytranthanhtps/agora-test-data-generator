@@ -52,6 +52,6 @@ Route any field that must be unique through
 - **Never hand-roll dedup** in a generator — reuse `Uniqueness` so the guarantee
   stays in one place.
 - A generator that emits **several people per record** (e.g. Parent + nested
-  children + guardians) must route every email through the **same** `ctx.uniq`
-  and the **same** `'email'` bucket, so nested values never collide with the
-  top-level one.
+  guardians — children carry no email) must route every email through the
+  **same** `ctx.uniq` and the **same** `'email'` bucket, so nested values never
+  collide with the top-level one.

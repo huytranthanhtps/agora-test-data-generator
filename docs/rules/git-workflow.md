@@ -3,7 +3,10 @@
 ## Hard rules
 
 1. **Branch-first.** Never commit on `main`. Cut a feature branch before any
-   change.
+   change. **`git fetch` and branch from `origin/main`, not local `main`** —
+   merges/deploys land on the remote, so local `main` can lag behind and
+   branching off it silently bases your work on stale code (missing whole
+   merged PRs).
 2. **Never `git push`, open a PR, or merge without explicit user approval in the
    current turn.** Local commits on a feature branch are fine; sharing them is a
    separate, explicit decision.
