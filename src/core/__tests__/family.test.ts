@@ -19,10 +19,10 @@ describe('family', () => {
     }
   })
 
-  it('child email is firstname.lastname on the mailinator.com domain', () => {
+  it('children carry no email field', () => {
     seedFaker('s')
     const kids = makeChildren(rng(), uniq(), 'Tan', 'normal')
-    for (const k of kids) expect(k.email).toMatch(/^[a-z0-9.]+@mailinator\.com$/)
+    for (const k of kids) expect('email' in k).toBe(false)
   })
 
   it('makeGuardians yields 0-2 guardians with gender-consistent relationships', () => {

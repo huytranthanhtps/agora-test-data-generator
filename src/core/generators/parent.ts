@@ -31,7 +31,6 @@ const CHILD_FIELDS: FieldMeta[] = [
   { key: 'age', label: 'Age' },
   { key: 'gradeLevel', label: 'Grade level' },
   { key: 'allergies', label: 'Allergies' },
-  { key: 'email', label: 'Email' },
 ]
 
 const GUARDIAN_FIELDS: FieldMeta[] = [

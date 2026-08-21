@@ -25,7 +25,6 @@ export type Child = {
   age: string
   gradeLevel: string
   allergies: string
-  email: string
 }
 
 export type Guardian = {
@@ -40,7 +39,7 @@ export type Guardian = {
 /** Children inherit the parent's surname, keeping the family link explicit. */
 export function makeChildren(
   rng: Rng,
-  uniq: Uniqueness,
+  _uniq: Uniqueness,
   parentLast: string,
   len: TextLen,
 ): Child[] {
@@ -53,8 +52,6 @@ export function makeChildren(
     const nick = preferredName(rng)
     const grade = rng.pick(GRADES)
     const allergies = len === 'normal' ? faker.lorem.words(2) : loremByLen(rng, len)
-    // Same person, but the email uses the parent's surname the child inherits.
-    const email = makeEmail({ ...p, last: parentLast, full: `${p.first} ${parentLast}` }, uniq)
     return {
       firstName: p.first,
       lastName: parentLast,
@@ -65,7 +62,6 @@ export function makeChildren(
       age: String(age),
       gradeLevel: grade,
       allergies,
-      email,
     }
   })
 }

@@ -55,15 +55,14 @@ describe('people generators', () => {
       expect(r.guardians.length).toBeLessThanOrEqual(2)
     }
   })
-  it('no email is duplicated across parents, children and guardians in a batch', () => {
+  it('no email is duplicated across parents and guardians in a batch', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 15, len: 'normal' }, ctx())
     const emails = rows.flatMap((r) => [
       r.email,
-      ...r.children.map((c) => c.email),
       ...r.guardians.map((g) => g.email),
     ])
-    expect(emails.length).toBeGreaterThan(15)
+    expect(emails.length).toBeGreaterThanOrEqual(15)
     expect(new Set(emails).size).toBe(emails.length)
   })
 })
