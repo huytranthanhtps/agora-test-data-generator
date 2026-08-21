@@ -65,4 +65,37 @@ describe('people generators', () => {
     expect(emails.length).toBeGreaterThanOrEqual(15)
     expect(new Set(emails).size).toBe(emails.length)
   })
+  it('single-parent mode emits exactly one row using the given name', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate(
+      { count: 5, len: 'normal', parentFirstName: 'Mai', parentLastName: 'Nguyen' },
+      ctx(),
+    )
+    expect(rows.length).toBe(1)
+    expect(rows[0].firstName).toBe('Mai')
+    expect(rows[0].lastName).toBe('Nguyen')
+    for (const c of rows[0].children) expect(c.lastName).toBe('Nguyen')
+  })
+  it('single-parent mode is deterministic for a given seed', () => {
+    const opts = {
+      count: 5,
+      len: 'normal' as const,
+      seed: 'abc',
+      parentFirstName: 'Mai',
+      parentLastName: 'Nguyen',
+    }
+    seedFaker('abc')
+    const a = parentGenerator.generate(opts, { rng: new Rng('abc'), uniq: new Uniqueness(new Rng('abc')) })
+    seedFaker('abc')
+    const b = parentGenerator.generate(opts, { rng: new Rng('abc'), uniq: new Uniqueness(new Rng('abc')) })
+    expect(a).toEqual(b)
+  })
+  it('blank name fields keep the random batch behavior', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate(
+      { count: 4, len: 'normal', parentFirstName: '  ', parentLastName: '' },
+      ctx(),
+    )
+    expect(rows.length).toBe(4)
+  })
 })

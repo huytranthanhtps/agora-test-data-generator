@@ -29,6 +29,8 @@ export interface GenerateOptions {
   len: TextLen
   seed?: string
   messagesPerTicket?: number
+  parentFirstName?: string
+  parentLastName?: string
 }
 
 export interface GenContext {

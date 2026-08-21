@@ -1,5 +1,6 @@
 import type { Generator, FieldMeta } from '../types'
-import { makePerson, makeEmail, sgMobile, sgPostcode } from '../names'
+import { makePerson, makeEmail, sgMobile, sgPostcode, ETHNICITIES } from '../names'
+import type { Person } from '../names'
 import { dobForAge } from './shared'
 import { makeChildren, makeGuardians, type Child, type Guardian } from './family'
 import { faker } from '../faker-seed'
@@ -59,9 +60,24 @@ export const parentGenerator: Generator<ParentRow> = {
     { key: 'children', label: 'Children', members: { refPrefix: 'CHD', nameKeys: ['firstName', 'lastName'], fields: CHILD_FIELDS } },
     { key: 'guardians', label: 'Guardians', members: { refPrefix: 'GRD', nameKeys: ['firstName', 'lastName'], badgeKey: 'relationship', fields: GUARDIAN_FIELDS } },
   ],
-  generate({ count, len }, { rng, uniq }) {
-    return Array.from({ length: count }, () => {
-      const p = makePerson(rng)
+  generate({ count, len, parentFirstName, parentLastName }, { rng, uniq }) {
+    // When both name fields are supplied, pin a single parent to that exact
+    // name (children inherit the surname); otherwise fall back to a random
+    // batch of `count` parents.
+    const first = parentFirstName?.trim()
+    const last = parentLastName?.trim()
+    const fixed = first && last ? { first, last } : null
+    const n = fixed ? 1 : count
+    return Array.from({ length: n }, () => {
+      const p: Person = fixed
+        ? {
+            first: fixed.first,
+            last: fixed.last,
+            full: `${fixed.first} ${fixed.last}`,
+            gender: rng.bool() ? 'male' : 'female',
+            ethnicity: rng.pick(ETHNICITIES),
+          }
+        : makePerson(rng)
       const { dob } = dobForAge(rng, 28, 50)
       // Parent email is registered first so it keeps the clean firstname.lastname
       // form; children/guardians then draw from the same uniqueness bucket.
