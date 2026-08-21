@@ -58,6 +58,11 @@ export default function App() {
         messages={g.messages}
         setMessages={g.setMessages}
         showMessages={g.entityKey === 'ticket'}
+        parentFirstName={g.parentFirstName}
+        setParentFirstName={g.setParentFirstName}
+        parentLastName={g.parentLastName}
+        setParentLastName={g.setParentLastName}
+        showParentName={g.entityKey === 'parent'}
         onGenerate={g.run}
         rows={g.rows}
         fields={g.generator.fields}

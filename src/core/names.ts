@@ -44,7 +44,7 @@ export function makeEmail(person: Person, uniq: Uniqueness): string {
   return uniq.ensure('email', () => {
     const suffix = seq === 0 ? '' : String(seq)
     seq++
-    // Uniqueness comes from the numeric suffix; mailinator.com is a disposable
+    // Uniqueness comes from the numeric suffix; yopmail.com is a disposable
     // inbox service, so these never reach a real person's mailbox.
     return `${local}${suffix}@${EMAIL_DOMAIN}`
   })

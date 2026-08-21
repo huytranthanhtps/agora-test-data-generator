@@ -16,6 +16,11 @@ interface Props {
   messages: number
   setMessages: (n: number) => void
   showMessages: boolean
+  parentFirstName: string
+  setParentFirstName: (s: string) => void
+  parentLastName: string
+  setParentLastName: (s: string) => void
+  showParentName: boolean
   onGenerate: () => void
   rows: Record[]
   fields: FieldMeta[]
@@ -150,6 +155,27 @@ export function Console(p: Props) {
               className="h-9 w-full rounded-lg border border-line bg-surface2 px-3 font-mono text-[13px] text-ink transition-colors placeholder:text-faint focus:border-accent focus:bg-surface focus:outline-none sm:w-36"
             />
           </Field>
+
+          {p.showParentName && (
+            <>
+              <Field label="Parent first name">
+                <input
+                  value={p.parentFirstName}
+                  onChange={(e) => p.setParentFirstName(e.target.value)}
+                  placeholder="random"
+                  className="h-9 w-full rounded-lg border border-line bg-surface2 px-3 font-mono text-[13px] text-ink transition-colors placeholder:text-faint focus:border-accent focus:bg-surface focus:outline-none sm:w-36"
+                />
+              </Field>
+              <Field label="Parent last name">
+                <input
+                  value={p.parentLastName}
+                  onChange={(e) => p.setParentLastName(e.target.value)}
+                  placeholder="random"
+                  className="h-9 w-full rounded-lg border border-line bg-surface2 px-3 font-mono text-[13px] text-ink transition-colors placeholder:text-faint focus:border-accent focus:bg-surface focus:outline-none sm:w-36"
+                />
+              </Field>
+            </>
+          )}
 
           <button
             onClick={p.onGenerate}

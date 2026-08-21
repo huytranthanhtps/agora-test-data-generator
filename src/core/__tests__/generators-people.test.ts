@@ -29,10 +29,10 @@ describe('people generators', () => {
       expect(r.relationship).toBe(r.gender === 'male' ? 'father' : 'mother')
     }
   })
-  it('parent email is firstname.lastname on the mailinator.com domain', () => {
+  it('parent email is firstname.lastname on the yopmail.com domain', () => {
     seedFaker('s')
     const [r] = parentGenerator.generate({ count: 1, len: 'normal' }, ctx())
-    expect(r.email).toMatch(/^[a-z0-9.]+@mailinator\.com$/)
+    expect(r.email).toMatch(/^[a-z0-9.]+@yopmail\.com$/)
   })
   it('parent emails are unique within a batch', () => {
     seedFaker('s')
@@ -55,15 +55,47 @@ describe('people generators', () => {
       expect(r.guardians.length).toBeLessThanOrEqual(2)
     }
   })
-  it('no email is duplicated across parents, children and guardians in a batch', () => {
+  it('no email is duplicated across parents and guardians in a batch', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 15, len: 'normal' }, ctx())
     const emails = rows.flatMap((r) => [
       r.email,
-      ...r.children.map((c) => c.email),
       ...r.guardians.map((g) => g.email),
     ])
-    expect(emails.length).toBeGreaterThan(15)
+    expect(emails.length).toBeGreaterThanOrEqual(15)
     expect(new Set(emails).size).toBe(emails.length)
+  })
+  it('single-parent mode emits exactly one row using the given name', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate(
+      { count: 5, len: 'normal', parentFirstName: 'Mai', parentLastName: 'Nguyen' },
+      ctx(),
+    )
+    expect(rows.length).toBe(1)
+    expect(rows[0].firstName).toBe('Mai')
+    expect(rows[0].lastName).toBe('Nguyen')
+    for (const c of rows[0].children) expect(c.lastName).toBe('Nguyen')
+  })
+  it('single-parent mode is deterministic for a given seed', () => {
+    const opts = {
+      count: 5,
+      len: 'normal' as const,
+      seed: 'abc',
+      parentFirstName: 'Mai',
+      parentLastName: 'Nguyen',
+    }
+    seedFaker('abc')
+    const a = parentGenerator.generate(opts, { rng: new Rng('abc'), uniq: new Uniqueness(new Rng('abc')) })
+    seedFaker('abc')
+    const b = parentGenerator.generate(opts, { rng: new Rng('abc'), uniq: new Uniqueness(new Rng('abc')) })
+    expect(a).toEqual(b)
+  })
+  it('blank name fields keep the random batch behavior', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate(
+      { count: 4, len: 'normal', parentFirstName: '  ', parentLastName: '' },
+      ctx(),
+    )
+    expect(rows.length).toBe(4)
   })
 })

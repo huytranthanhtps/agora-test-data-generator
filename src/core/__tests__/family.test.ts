@@ -10,19 +10,19 @@ function uniq() { return new Uniqueness(new Rng('s')) }
 describe('family', () => {
   it('makeChildren yields 1-3 children, all sharing the parent last name', () => {
     seedFaker('s')
-    const r = rng(), u = uniq()
+    const r = rng()
     for (let i = 0; i < 20; i++) {
-      const kids = makeChildren(r, u, 'Tan', 'normal')
+      const kids = makeChildren(r, 'Tan', 'normal')
       expect(kids.length).toBeGreaterThanOrEqual(1)
       expect(kids.length).toBeLessThanOrEqual(3)
       for (const k of kids) expect(k.lastName).toBe('Tan')
     }
   })
 
-  it('child email is firstname.lastname on the mailinator.com domain', () => {
+  it('children carry no email field', () => {
     seedFaker('s')
-    const kids = makeChildren(rng(), uniq(), 'Tan', 'normal')
-    for (const k of kids) expect(k.email).toMatch(/^[a-z0-9.]+@mailinator\.com$/)
+    const kids = makeChildren(rng(), 'Tan', 'normal')
+    for (const k of kids) expect('email' in k).toBe(false)
   })
 
   it('makeGuardians yields 0-2 guardians with gender-consistent relationships', () => {
@@ -40,14 +40,14 @@ describe('family', () => {
     }
   })
 
-  it('each guardian has separate first and last names on the mailinator.com domain', () => {
+  it('each guardian has separate first and last names on the yopmail.com domain', () => {
     seedFaker('s')
     const gs = makeGuardians(rng(), uniq())
     for (const g of gs) {
       expect(g.firstName).toBeTruthy()
       expect(g.lastName).toBeTruthy()
       expect('fullName' in g).toBe(false)
-      expect(g.email).toMatch(/@mailinator\.com$/)
+      expect(g.email).toMatch(/@yopmail\.com$/)
     }
   })
 })
