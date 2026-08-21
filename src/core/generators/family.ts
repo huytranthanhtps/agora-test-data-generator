@@ -39,7 +39,6 @@ export type Guardian = {
 /** Children inherit the parent's surname, keeping the family link explicit. */
 export function makeChildren(
   rng: Rng,
-  _uniq: Uniqueness,
   parentLast: string,
   len: TextLen,
 ): Child[] {

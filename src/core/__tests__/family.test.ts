@@ -10,9 +10,9 @@ function uniq() { return new Uniqueness(new Rng('s')) }
 describe('family', () => {
   it('makeChildren yields 1-3 children, all sharing the parent last name', () => {
     seedFaker('s')
-    const r = rng(), u = uniq()
+    const r = rng()
     for (let i = 0; i < 20; i++) {
-      const kids = makeChildren(r, u, 'Tan', 'normal')
+      const kids = makeChildren(r, 'Tan', 'normal')
       expect(kids.length).toBeGreaterThanOrEqual(1)
       expect(kids.length).toBeLessThanOrEqual(3)
       for (const k of kids) expect(k.lastName).toBe('Tan')
@@ -21,7 +21,7 @@ describe('family', () => {
 
   it('children carry no email field', () => {
     seedFaker('s')
-    const kids = makeChildren(rng(), uniq(), 'Tan', 'normal')
+    const kids = makeChildren(rng(), 'Tan', 'normal')
     for (const k of kids) expect('email' in k).toBe(false)
   })
 

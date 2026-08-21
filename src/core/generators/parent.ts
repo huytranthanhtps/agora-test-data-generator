@@ -88,7 +88,7 @@ export const parentGenerator: Generator<ParentRow> = {
           ? faker.location.streetAddress(true).repeat(6)
           : faker.location.streetAddress(len === 'long')
       const postcode = sgPostcode(rng)
-      const children = makeChildren(rng, uniq, p.last, len)
+      const children = makeChildren(rng, p.last, len)
       const guardians = makeGuardians(rng, uniq)
       return {
         firstName: p.first,
