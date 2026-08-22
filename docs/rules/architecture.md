@@ -17,6 +17,10 @@ by `shortcut`. Each implements the `Generator` interface (`src/core/types.ts`):
 `key`, `label`, `shortcut`, `fields: FieldMeta[]`, `generate(opts, ctx)`, where
 `ctx: GenContext = { rng, uniq }`.
 
+Keep shortcuts a contiguous `1..N` run (a new generator gets `N+1`) — the
+keyboard selector in `App.tsx` matches a single keypress (`Number(e.key)`), so a
+shortcut ≥ 10 is registered and clickable but never keyboard-selectable.
+
 ## Invariants (MANDATORY — never regress these)
 
 These two are the product's core promise. A change that breaks either is a
