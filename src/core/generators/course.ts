@@ -1,6 +1,6 @@
 import type { Generator } from '../types'
-import { courseDescription, iconicName } from '../text'
-import { SUBJECTS, SUBJECT_TYPE, GRADES, COURSE_FOCUS } from '../data'
+import { htmlMessage, iconicName } from '../text'
+import { SUBJECT_TYPE } from '../data'
 
 export const courseGenerator: Generator = {
   key: 'course',
@@ -8,7 +8,7 @@ export const courseGenerator: Generator = {
   shortcut: 2,
   fields: [
     { key: 'name', label: 'Name' },
-    { key: 'description', label: 'Description' },
+    { key: 'description', label: 'Description', html: true },
     { key: 'subjectType', label: 'Subject type' },
     { key: 'minAge', label: 'Min age' },
     { key: 'maxAge', label: 'Max age' },
@@ -21,16 +21,13 @@ export const courseGenerator: Generator = {
     return Array.from({ length: count }, () => {
       const sessions = rng.int(4, 12)
       const duration = rng.pick([60, 90, 120] as const)
-      // Name is faker + lorem + icons; subject/grade/focus still drive the
-      // (education-flavoured) description.
-      const subject = rng.pick(SUBJECTS)
-      const grade = rng.pick(GRADES)
-      const focus = rng.pick(COURSE_FOCUS)
+      // Name is faker + lorem + icons; description is rich HTML (same generator
+      // as the Update Message message field).
       const name = uniq.ensure('course.name', () => iconicName(rng, len))
       const minAge = rng.int(4, 12)
       return {
         name,
-        description: courseDescription(rng, { subject, grade, focus, sessions, duration }, len),
+        description: htmlMessage(rng, len),
         subjectType: rng.pick(SUBJECT_TYPE),
         minAge: String(minAge),
         maxAge: String(minAge + rng.int(2, 4)),
