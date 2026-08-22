@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest'
 import { GENERATORS, getGenerator, generate } from '@/core/registry'
 
 describe('registry', () => {
-  it('has 7 generators with contiguous shortcuts 1..7', () => {
-    expect(GENERATORS).toHaveLength(7)
-    expect(GENERATORS.map(g => g.shortcut)).toEqual([1, 2, 3, 4, 5, 6, 7])
+  it('has 8 generators with contiguous shortcuts 1..8', () => {
+    expect(GENERATORS).toHaveLength(8)
+    expect(GENERATORS.map(g => g.shortcut)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
   })
   it('no longer exposes a standalone student generator', () => {
     expect(getGenerator('student')).toBeUndefined()
