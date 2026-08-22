@@ -19,6 +19,13 @@ describe('academic generators', () => {
     const rows = courseGenerator.generate({ count: 20, len: 'normal' }, ctx())
     for (const r of rows) expect(Number(r.maxAge)).toBeGreaterThanOrEqual(Number(r.minAge))
   })
+  it('course description is rich HTML and the field is marked html', () => {
+    const field = courseGenerator.fields.find(f => f.key === 'description')
+    expect(field?.html).toBe(true)
+    seedFaker('s')
+    const rows = courseGenerator.generate({ count: 5, len: 'normal' }, ctx())
+    for (const r of rows) expect(String(r.description)).toMatch(/<\w+/)
+  })
   it('instance codes are unique 8-letter strings', () => {
     seedFaker('s')
     const rows = instanceGenerator.generate({ count: 20, len: 'normal' }, ctx())
