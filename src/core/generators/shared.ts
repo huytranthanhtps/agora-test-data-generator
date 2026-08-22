@@ -19,6 +19,10 @@ export function fmtDate(d: Date): string {
   return `${dd}/${mm}/${d.getUTCFullYear()}`
 }
 
+export function fmtTime(hour: number, minute: number): string {
+  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+}
+
 export function futureDate(rng: Rng, minDays: number, maxDays: number): Date {
   return addDays(BASE_DATE, rng.int(minDays, maxDays))
 }

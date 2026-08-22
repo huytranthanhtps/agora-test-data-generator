@@ -46,8 +46,9 @@ const ol = (r: Rng, n: number) =>
 const para = (r: Rng, n: number) =>
   `<p>${Array.from({ length: n }, () => richSentence(r)).join(' ')}</p>`
 
-// Icons/symbols scattered into generated names to stress-test rendering.
-const NAME_ICONS = ['📘', '✏️', '🧪', '🎨', '🔬', '🧮', '🚀', '⭐', '🎯', '★', '✦', '✽', '◆', '▶'] as const
+// Emoji icons (school/education-flavoured, no typographic symbols) dropped into
+// generated names to exercise emoji rendering.
+const NAME_ICONS = ['📘', '📗', '📙', '📚', '📖', '✏️', '🖍️', '📝', '📐', '📏', '🧪', '🔬', '🔭', '🎨', '🧮', '🔢', '🚀', '⭐', '🎯', '🎓', '🏫', '🏆', '🥇', '🧩', '💡', '🎵', '🎭', '⚽', '🏀', '🌍', '💻', '🧠'] as const
 
 const capWords = (s: string) => s.split(/\s+/).map(cap).join(' ')
 
@@ -67,9 +68,8 @@ function fakerAnchor(r: Rng): string {
 
 /**
  * A unique display name: faker.js data (the meaningful anchor) + some lorem for
- * entropy + 1–3 icons/symbols dropped in at random positions. Richness (lorem
- * length + icon count) scales with `len`. Used for entity names and the Update
- * Message title.
+ * entropy + at most one emoji icon dropped in at a random position. Lorem length
+ * still scales with `len`. Used for entity names and the Update Message title.
  */
 export function iconicName(r: Rng, len: TextLen): string {
   const loremCount = len === 'stress' ? r.int(3, 5) : len === 'long' ? 2 : 1
@@ -77,7 +77,7 @@ export function iconicName(r: Rng, len: TextLen): string {
     ...fakerAnchor(r).split(/\s+/),
     ...faker.lorem.words(loremCount).split(/\s+/).map(cap),
   ]
-  const iconCount = len === 'normal' ? r.int(1, 2) : r.int(2, 3)
+  const iconCount = r.int(0, 1)
   for (let i = 0; i < iconCount; i++) {
     tokens.splice(r.int(0, tokens.length), 0, r.pick(NAME_ICONS))
   }

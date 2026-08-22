@@ -46,3 +46,6 @@ random source.
   fields + field shape (all `fields[].key` present).
 - `npm test` must pass and `npm run build` must be green before done — exercise
   the actual change, don't assert "done" from memory.
+- **Adding a generator** also breaks `registry.test.ts`: it asserts the exact
+  `GENERATORS` length and that shortcuts are the contiguous run `[1..N]`. Give the
+  new generator shortcut `N+1` and bump both assertions.

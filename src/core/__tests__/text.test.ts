@@ -1,7 +1,25 @@
 import { describe, it, expect } from 'vitest'
 import { Rng } from '@/core/rng'
 import { seedFaker } from '@/core/faker-seed'
-import { loremByLen, htmlMessage, chatTranscript } from '@/core/text'
+import { loremByLen, htmlMessage, chatTranscript, iconicName } from '@/core/text'
+
+// Typographic symbols that must no longer appear in generated names.
+const BANNED_SYMBOLS = ['★', '✦', '✽', '◆', '▶']
+
+describe('iconicName icon policy', () => {
+  it('inserts at most one icon and never a typographic symbol', () => {
+    seedFaker('s')
+    const r = new Rng('s')
+    for (const len of ['normal', 'long', 'stress'] as const) {
+      for (let i = 0; i < 40; i++) {
+        const name = iconicName(r, len)
+        for (const sym of BANNED_SYMBOLS) expect(name).not.toContain(sym)
+        const icons = [...name].filter(ch => /\p{Extended_Pictographic}/u.test(ch)).length
+        expect(icons).toBeLessThanOrEqual(1)
+      }
+    }
+  })
+})
 
 describe('text', () => {
   it('stress is longer than normal', () => {

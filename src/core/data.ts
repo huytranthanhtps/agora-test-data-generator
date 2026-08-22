@@ -31,3 +31,11 @@ export const PRODUCT_EDITIONS = ['2026 Edition', 'Revised Edition', 'Deluxe Set'
 
 export const DEV_MARKER = '[DEV]'
 export const EMAIL_DOMAIN = 'yopmail.com'
+
+// School-date (venue calendar) types and per-type name pools. See
+// sql/722_create_school_date.sql — an entry is an event, a term/half-term break,
+// or a closure, shown on the parent-app calendar for a venue.
+export const SCHOOL_DATE_TYPE = ['Event', 'Break', 'Closure'] as const
+export const SCHOOL_EVENT_NAMES = ['Sports Day', 'Open House', 'Parent-Teacher Conference', 'Graduation Ceremony', 'Annual Concert', 'Science Fair', 'Book Fair', 'Founders Day', 'Excursion Day', 'Report Card Day'] as const
+export const SCHOOL_BREAK_NAMES = ['Term 1 Break', 'Term 2 Break', 'Term 3 Break', 'Half-Term Break', 'March Holidays', 'June Holidays', 'September Holidays', 'Year-End Break'] as const
+export const SCHOOL_CLOSURE_NAMES = ['Public Holiday — Deepavali', 'Public Holiday — Hari Raya Puasa', 'Public Holiday — Chinese New Year', 'Public Holiday — National Day', 'Staff Training Day', 'Deep Cleaning Closure', 'Emergency Closure', 'Renovation Closure'] as const
