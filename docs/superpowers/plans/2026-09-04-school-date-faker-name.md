@@ -60,26 +60,47 @@ never scaled with `len`. `iconicName` fixes both.
 - [ ] **Step 1: Write the failing test**
 
 Add this case to `describe('school date generator', …)` in
-`src/core/__tests__/generators-schoolDate.test.ts`. It guards the actual
-behaviour change: a fixed pool cannot scale with `len`, `iconicName` does
-(its `loremCount` is 1 / 2 / 3-5 for normal / long / stress).
+`src/core/__tests__/generators-schoolDate.test.ts`.
+
+> **Corrected during execution.** This step originally specified a
+> "name length totals are bigger at `len: 'stress'` than at `'normal'`" test.
+> That test **passes against the old pool code**, for the wrong reason:
+> `htmlMessage(rng, len)` consumes a *different number* of `rng` draws per
+> `len`, so every later draw shifts and the generator picks different pool
+> names — the totals differ by luck, not because `name` scaled. Any
+> "output varies with `len`" assertion in this repo is suspect for the same
+> reason. The real discriminator is the pool's **size**: it held 26 strings,
+> so a 100-row batch forced `Uniqueness` into its fallback, which appends a
+> `' XXXX'` 4-letter suffix (`src/core/uniqueness.ts`). An unbounded name
+> source never needs it, so the suffix's absence is what proves the source
+> changed. Measured on the old code: 74 of 100 names were suffixed.
 
 ```ts
-  it('name richness scales with len', () => {
-    const normal = generate('schoolDate', { count: 20, len: 'normal', seed: 'abc' })
-    const stress = generate('schoolDate', { count: 20, len: 'stress', seed: 'abc' })
-    const total = (rows: { name?: unknown }[]) =>
-      rows.reduce((n, r) => n + String(r.name).length, 0)
-    expect(total(stress)).toBeGreaterThan(total(normal))
+  // Names come from `iconicName` (faker + lorem), not a fixed pool. The pool
+  // held only 26 strings, so a batch this size forced `Uniqueness` into its
+  // fallback, which appends a ' XXXX' 4-letter suffix. An unbounded name source
+  // never needs that — so the absence of the suffix is what proves the source.
+  it('names have enough variety that uniq never falls back to a suffix', () => {
+    const rows = generate('schoolDate', { count: 100, len: 'normal', seed: 'variety' })
+    const suffixed = rows.map(r => r.name as string).filter(n => / [A-Z]{4}$/.test(n))
+    expect(suffixed).toEqual([])
+    expect(new Set(rows.map(r => r.name)).size).toBe(100)
   })
 ```
+
+The regex is safe: `cap()` in `src/core/text.ts` uppercases only a token's
+first character, so no legitimate `iconicName` output has four consecutive
+uppercase letters. Verified empirically over 30,000 samples across 400 seeds
+x 3 lengths — 0 matches (the only all-caps token faker emits is `AI`, two
+characters, never trailing).
 
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx vitest run src/core/__tests__/generators-schoolDate.test.ts`
-Expected: FAIL on `name richness scales with len` — pool names are identical
-regardless of `len`, so the two totals are equal
-(`expected N to be greater than N`). The other 8 cases still pass.
+Expected: FAIL with
+`AssertionError: expected [ 'September Holidays BMBL', …(73) ] to deeply equal []`
+— 74 of the 100 pool-drawn names carry the fallback suffix. The other 8 cases
+still pass.
 
 - [ ] **Step 3: Rewrite the generator's name source**
 
