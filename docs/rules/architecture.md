@@ -52,6 +52,15 @@ Route any field that must be unique through
 - It tracks a `Set` per `bucket`; after `maxTries` (default 50) it appends a
   random 4-letter A–Z suffix until unique, so it **always** returns a unique
   value.
+- **That fallback degrades data quality silently — size the source to the
+  batch.** Nothing errors when `produce()` runs out of variety; you just start
+  getting values like `September Holidays BMBL`. School Date's `name` used a
+  26-string pool, so a 100-row batch emitted **74** suffixed names before anyone
+  noticed. A fixed pool is only safe for a `uniq`-wrapped field if it comfortably
+  exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder
+  (`iconicName`), as `course`, `product`, `klass`, `message` and now `schoolDate`
+  all do. The trailing ` XXXX` is the observable smell — assert its absence to
+  catch a regression (`docs/rules/testing.md`).
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
 - **Never hand-roll dedup** in a generator — reuse `Uniqueness` so the guarantee
   stays in one place.

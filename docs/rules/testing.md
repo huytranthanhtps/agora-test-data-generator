@@ -58,6 +58,31 @@ Same hash = same output. Do this whenever an agent (or you) calls a change
 "behaviour-preserving" — an assertion is not evidence. Note `console.log` needs
 `npx vitest run <file> --disable-console-intercept` to reach the terminal.
 
+## Beware "output varies with `len`" assertions
+
+The same call-sequence coupling makes a whole class of test **pass for the wrong
+reason**. `htmlMessage` and `iconicName` consume a *different number* of `rng`
+draws per `len`, so every draw after them shifts too — which means an unrelated
+field's value also changes between `len: 'normal'` and `len: 'stress'`. A test
+like this therefore proves nothing:
+
+```ts
+// BAD — passes even if `name` is a fixed pool that ignores `len` entirely
+expect(totalNameLength(stressRows)).toBeGreaterThan(totalNameLength(normalRows))
+```
+
+It was written to prove School Date's `name` scaled with `len`, and it passed
+against the old code, where `name` was a 26-string pool with no `len` input at
+all — the totals differed only because the shifted rng sequence picked different
+pool entries.
+
+**Assert on something intrinsic to the field instead.** For "this field now has
+unbounded variety", the discriminator was the batch-size behaviour: a 26-entry
+pool at `count: 100` forces `Uniqueness` into its `' XXXX'` suffix fallback,
+while an unbounded source never needs it — so `expect(suffixedNames).toEqual([])`
+fails loudly on the old code and passes on the new. Before trusting a new test,
+**run it against the pre-change code** and confirm it actually goes red.
+
 ## What to test
 
 - Every generator: determinism (above) + no-duplicate for uniqueness-sensitive

@@ -28,7 +28,9 @@
   Singapore-flavoured (`BUSINESS_UNITS`, `GRADES`, `SUBJECTS`, …). Mixing the
   two in one record is a deliberate trade-off (infinite variety vs. local
   colour) — make it knowingly, and prefer a `data.ts` pool when the field is
-  parent-facing.
+  parent-facing **and not routed through `ctx.uniq`**: behind `uniq`, a pool
+  smaller than the batch silently degrades into suffixed junk
+  (`docs/rules/architecture.md`).
 
 ## Reuse before you create
 
