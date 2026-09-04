@@ -62,4 +62,40 @@ describe('school date generator', () => {
       if (r.allDay === 'No') expect(r.type).toBe('Event')
     }
   })
+
+  it('emits a non-empty location for every row, spanning several shapes', () => {
+    seedFaker('s')
+    const rows = schoolDateGenerator.generate({ count: 60, len: 'normal' }, ctx())
+    for (const r of rows) expect((r.location as string).length).toBeGreaterThan(0)
+    // The four shapes are distinguishable: a room name starts with one of the
+    // room words, a civic venue ends with a civic suffix, a street address
+    // starts with a house number. Seeing >1 shape proves the picker isn't
+    // stuck on a single branch.
+    const shape = (v: string): string => {
+      if (/^(Room|Studio|Lab|Hall) /.test(v)) return 'room'
+      if (/(Community Club|Sports Complex|Public Library|Convention Centre)$/.test(v)) return 'civic'
+      if (/^\d/.test(v)) return 'street'
+      return 'landmark'
+    }
+    expect(new Set(rows.map(r => shape(r.location as string))).size).toBeGreaterThan(1)
+  })
+
+  it('description is rich HTML', () => {
+    seedFaker('s')
+    const rows = schoolDateGenerator.generate({ count: 10, len: 'normal' }, ctx())
+    for (const r of rows) {
+      const html = r.description as string
+      expect(html).toContain('<h2>')
+      expect(html).toContain('<p>')
+      expect(html).toContain('<ul>')
+    }
+  })
+
+  it('description richness scales with len', () => {
+    const normal = generate('schoolDate', { count: 5, len: 'normal', seed: 'abc' })
+    const stress = generate('schoolDate', { count: 5, len: 'stress', seed: 'abc' })
+    const total = (rows: { description?: unknown }[]) =>
+      rows.reduce((n, r) => n + String(r.description).length, 0)
+    expect(total(stress)).toBeGreaterThan(total(normal))
+  })
 })

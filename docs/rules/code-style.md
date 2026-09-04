@@ -22,6 +22,13 @@
 - Randomness in a generator comes from **`ctx.rng`** and the seeded `faker`
   (`@/core/faker-seed`) — **never** bare `Math.random()`. This preserves the
   seeded-reproducibility invariant.
+- **`faker.location.*` / `faker.company.*` are US-flavoured.**
+  `location.streetAddress()` → `1229 Nicholas Ridges`, `location.city()` →
+  `Port Santiagoborough`. Every hand-written pool in `data.ts` is instead
+  Singapore-flavoured (`BUSINESS_UNITS`, `SCHOOL_CLOSURE_NAMES`, …). Mixing the
+  two in one record is a deliberate trade-off (infinite variety vs. local
+  colour) — make it knowingly, and prefer a `data.ts` pool when the field is
+  parent-facing.
 
 ## Reuse before you create
 
@@ -37,6 +44,11 @@ Before adding a new helper, check for an existing one:
 
 If a helper almost fits, extend it (add a param / sibling export) rather than
 copy-paste-tweak.
+
+Careful with the two place-like names: School Date's `venue` field is a
+**campus** (`BUSINESS_UNITS`), its `location` is the specific room/landmark.
+`VENUES` in `data.ts` is room-level but wired only into `klass.ts` — don't
+assume it's the shared location pool.
 
 ## Rich HTML fields (`html: true`)
 

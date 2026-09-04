@@ -55,6 +55,13 @@ Route any field that must be unique through
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
 - **Never hand-roll dedup** in a generator — reuse `Uniqueness` so the guarantee
   stays in one place.
+- **Not every field belongs in `uniq`.** Only wrap what a human would notice
+  repeating (name, email, course title). A field whose real-world values
+  legitimately repeat must stay unwrapped — School Date's `location` is a room,
+  and several events sharing a room is correct data, not a duplicate. Same for
+  lorem-backed rich text (`description`), where collisions are already
+  vanishingly unlikely. Wrapping these would fabricate variety the domain
+  doesn't have.
 - A generator that emits **several people per record** (e.g. Parent + nested
   guardians — children carry no email) must route every email through the
   **same** `ctx.uniq` and the **same** `'email'` bucket, so nested values never
