@@ -40,6 +40,24 @@ expect(a).toEqual(b)
 for it — it's the cheapest guard against silently reintroducing a non-seeded
 random source.
 
+## Proving a refactor inside a generator is output-preserving
+
+A generator's output for a seed depends on the **exact sequence and count** of
+`ctx.rng` / `faker` calls — so reordering, adding or dropping a draw is a
+behaviour change, not a refactor, and the existing determinism test (which
+compares two calls of the *same* code) cannot catch it. To prove a refactor is
+safe, hash a seeded batch **before and after** the edit and compare:
+
+```ts
+const rows = generate('schoolDate', { count: 50, len: 'long', seed: 'hash-check' })
+console.log(createHash('sha256').update(JSON.stringify(rows)).digest('hex'))
+```
+
+Run it on the edited tree, `git stash` the edit, run it again, `git stash pop`.
+Same hash = same output. Do this whenever an agent (or you) calls a change
+"behaviour-preserving" — an assertion is not evidence. Note `console.log` needs
+`npx vitest run <file> --disable-console-intercept` to reach the terminal.
+
 ## What to test
 
 - Every generator: determinism (above) + no-duplicate for uniqueness-sensitive
