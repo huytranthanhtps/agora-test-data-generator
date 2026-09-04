@@ -98,4 +98,15 @@ describe('school date generator', () => {
       rows.reduce((n, r) => n + String(r.description).length, 0)
     expect(total(stress)).toBeGreaterThan(total(normal))
   })
+
+  // Names come from `iconicName` (faker + lorem), not a fixed pool. The pool
+  // held only 26 strings, so a batch this size forced `Uniqueness` into its
+  // fallback, which appends a ' XXXX' 4-letter suffix. An unbounded name source
+  // never needs that — so the absence of the suffix is what proves the source.
+  it('names have enough variety that uniq never falls back to a suffix', () => {
+    const rows = generate('schoolDate', { count: 100, len: 'normal', seed: 'variety' })
+    const suffixed = rows.map(r => r.name as string).filter(n => / [A-Z]{4}$/.test(n))
+    expect(suffixed).toEqual([])
+    expect(new Set(rows.map(r => r.name)).size).toBe(100)
+  })
 })

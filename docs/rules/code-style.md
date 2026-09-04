@@ -25,7 +25,7 @@
 - **`faker.location.*` / `faker.company.*` are US-flavoured.**
   `location.streetAddress()` → `1229 Nicholas Ridges`, `location.city()` →
   `Port Santiagoborough`. Every hand-written pool in `data.ts` is instead
-  Singapore-flavoured (`BUSINESS_UNITS`, `SCHOOL_CLOSURE_NAMES`, …). Mixing the
+  Singapore-flavoured (`BUSINESS_UNITS`, `GRADES`, `SUBJECTS`, …). Mixing the
   two in one record is a deliberate trade-off (infinite variety vs. local
   colour) — make it knowingly, and prefer a `data.ts` pool when the field is
   parent-facing.

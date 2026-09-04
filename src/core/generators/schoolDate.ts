@@ -1,26 +1,12 @@
 import type { Generator } from '../types'
 import type { Rng } from '../rng'
 import { faker } from '../faker-seed'
-import { htmlMessage } from '../text'
+import { htmlMessage, iconicName } from '../text'
 import { BASE_DATE, addDays, fmtDate, fmtTime } from './shared'
-import {
-  SCHOOL_DATE_TYPE,
-  SCHOOL_EVENT_NAMES,
-  SCHOOL_BREAK_NAMES,
-  SCHOOL_CLOSURE_NAMES,
-  BUSINESS_UNITS,
-  PROGRAMMES,
-} from '../data'
+import { SCHOOL_DATE_TYPE, BUSINESS_UNITS, PROGRAMMES } from '../data'
 
 // Empty-time placeholder for all-day rows (mirrors NULL start_time/end_time).
 const NONE = '—'
-
-// Name pool per date type.
-const NAMES_BY_TYPE: Record<(typeof SCHOOL_DATE_TYPE)[number], readonly string[]> = {
-  Event: SCHOOL_EVENT_NAMES,
-  Break: SCHOOL_BREAK_NAMES,
-  Closure: SCHOOL_CLOSURE_NAMES,
-}
 
 // Where the event physically happens: a specific place inside (or outside) the
 // `venue` campus. Drawn from the seeded faker so it stays reproducible, in four
@@ -63,7 +49,7 @@ export const schoolDateGenerator: Generator = {
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
       const type = rng.pick(SCHOOL_DATE_TYPE)
-      const name = uniq.ensure('schoolDate.name', () => rng.pick(NAMES_BY_TYPE[type]))
+      const name = uniq.ensure('schoolDate.name', () => iconicName(rng, len))
 
       const venue = rng.pick(BUSINESS_UNITS)
       // programme_id NULL (whole venue) ~60%, narrowed to one programme ~40%.
