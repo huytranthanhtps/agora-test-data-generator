@@ -28,7 +28,7 @@ const NAMES_BY_TYPE: Record<(typeof SCHOOL_DATE_TYPE)[number], readonly string[]
 const LANDMARK_SUFFIX = ['Centre', 'Hall', 'Auditorium', 'Pavilion'] as const
 const ROOM_WORD = ['Room', 'Studio', 'Lab', 'Hall'] as const
 const CIVIC_SUFFIX = ['Community Club', 'Sports Complex', 'Public Library', 'Convention Centre'] as const
-const ROOM_LETTER = 'ABCDEFGH'.split('')
+const ROOM_LETTER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as const
 
 function eventLocation(r: Rng): string {
   switch (r.int(0, 3)) {

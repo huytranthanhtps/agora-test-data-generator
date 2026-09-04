@@ -71,14 +71,12 @@ describe('school date generator', () => {
     // room words, a civic venue ends with a civic suffix, a street address
     // starts with a house number. Seeing >1 shape proves the picker isn't
     // stuck on a single branch.
-    const shape = (v: string) =>
-      /^(Room|Studio|Lab|Hall) /.test(v)
-        ? 'room'
-        : /(Community Club|Sports Complex|Public Library|Convention Centre)$/.test(v)
-          ? 'civic'
-          : /^\d/.test(v)
-            ? 'street'
-            : 'landmark'
+    const shape = (v: string): string => {
+      if (/^(Room|Studio|Lab|Hall) /.test(v)) return 'room'
+      if (/(Community Club|Sports Complex|Public Library|Convention Centre)$/.test(v)) return 'civic'
+      if (/^\d/.test(v)) return 'street'
+      return 'landmark'
+    }
     expect(new Set(rows.map(r => shape(r.location as string))).size).toBeGreaterThan(1)
   })
 
