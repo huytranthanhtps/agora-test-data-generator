@@ -54,11 +54,11 @@ Route any field that must be unique through
   value.
 - **That fallback degrades data quality silently — size the source to the
   batch.** Nothing errors when `produce()` runs out of variety; you just start
-  getting values like `September Holidays BMBL`. School Date's `name` used a
+  getting values like `September Holidays BMBL`. Calendar's `name` used a
   26-string pool, so a 100-row batch emitted **74** suffixed names before anyone
   noticed. A fixed pool is only safe for a `uniq`-wrapped field if it comfortably
   exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder
-  (`iconicName`), as `course`, `product`, `klass`, `message` and now `schoolDate`
+  (`iconicName`), as `course`, `product`, `klass`, `message` and now `calendar`
   all do. The trailing ` XXXX` is the observable smell — assert its absence to
   catch a regression (`docs/rules/testing.md`).
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
@@ -66,8 +66,8 @@ Route any field that must be unique through
   stays in one place.
 - **Not every field belongs in `uniq`.** Only wrap what a human would notice
   repeating (name, email, course title). A field whose real-world values
-  legitimately repeat must stay unwrapped — School Date's `location` is a room,
-  and several events sharing a room is correct data, not a duplicate. Same for
+  legitimately repeat must stay unwrapped — Calendar's `venue` is a campus, and
+  many entries sharing a campus is correct data, not a duplicate. Same for
   lorem-backed rich text (`description`), where collisions are already
   vanishingly unlikely. Wrapping these would fabricate variety the domain
   doesn't have.

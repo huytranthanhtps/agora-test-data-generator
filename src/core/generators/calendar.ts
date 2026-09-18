@@ -1,14 +1,14 @@
 import type { Generator } from '../types'
 import { htmlMessage, iconicName } from '../text'
 import { BASE_DATE, addDays, fmtDate, fmtTime } from './shared'
-import { SCHOOL_DATE_TYPE, BUSINESS_UNITS, PROGRAMMES } from '../data'
+import { CALENDAR_TYPE, BUSINESS_UNITS, PROGRAMMES } from '../data'
 
 // Empty-time placeholder for all-day rows (mirrors NULL start_time/end_time).
 const NONE = '—'
 
-export const schoolDateGenerator: Generator = {
-  key: 'schoolDate',
-  label: 'School Date',
+export const calendarGenerator: Generator = {
+  key: 'calendar',
+  label: 'Calendar',
   shortcut: 8,
   fields: [
     { key: 'name', label: 'Name' },
@@ -24,8 +24,8 @@ export const schoolDateGenerator: Generator = {
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
-      const type = rng.pick(SCHOOL_DATE_TYPE)
-      const name = uniq.ensure('schoolDate.name', () => iconicName(rng, len))
+      const type = rng.pick(CALENDAR_TYPE)
+      const name = uniq.ensure('calendar.name', () => iconicName(rng, len))
 
       const venue = rng.pick(BUSINESS_UNITS)
       // programme_id NULL (whole venue) ~60%, narrowed to one programme ~40%.

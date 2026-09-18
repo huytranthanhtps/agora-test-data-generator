@@ -9,12 +9,12 @@ import { klassGenerator } from './generators/klass'
 import { productGenerator } from './generators/product'
 import { messageGenerator } from './generators/message'
 import { ticketGenerator } from './generators/ticket'
-import { schoolDateGenerator } from './generators/schoolDate'
+import { calendarGenerator } from './generators/calendar'
 
 export const GENERATORS: Generator[] = [
   parentGenerator, courseGenerator, instanceGenerator,
   klassGenerator, productGenerator, messageGenerator, ticketGenerator,
-  schoolDateGenerator,
+  calendarGenerator,
 ].sort((a, b) => a.shortcut - b.shortcut)
 
 const BY_KEY = new Map(GENERATORS.map(g => [g.key, g]))

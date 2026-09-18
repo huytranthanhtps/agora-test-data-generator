@@ -49,7 +49,7 @@ compares two calls of the *same* code) cannot catch it. To prove a refactor is
 safe, hash a seeded batch **before and after** the edit and compare:
 
 ```ts
-const rows = generate('schoolDate', { count: 50, len: 'long', seed: 'hash-check' })
+const rows = generate('calendar', { count: 50, len: 'long', seed: 'hash-check' })
 console.log(createHash('sha256').update(JSON.stringify(rows)).digest('hex'))
 ```
 
@@ -71,7 +71,7 @@ like this therefore proves nothing:
 expect(totalNameLength(stressRows)).toBeGreaterThan(totalNameLength(normalRows))
 ```
 
-It was written to prove School Date's `name` scaled with `len`, and it passed
+It was written to prove Calendar's `name` scaled with `len`, and it passed
 against the old code, where `name` was a 26-string pool with no `len` input at
 all — the totals differed only because the shifted rng sequence picked different
 pool entries.
