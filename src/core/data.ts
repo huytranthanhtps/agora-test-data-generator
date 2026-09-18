@@ -32,7 +32,7 @@ export const PRODUCT_EDITIONS = ['2026 Edition', 'Revised Edition', 'Deluxe Set'
 export const DEV_MARKER = '[DEV]'
 export const EMAIL_DOMAIN = 'yopmail.com'
 
-// School-date (venue calendar) entry types. See
-// sql/722_create_school_date.sql — an entry is an event, a term/half-term break,
-// or a closure, shown on the parent-app calendar for a venue.
-export const SCHOOL_DATE_TYPE = ['Event', 'Break', 'Closure'] as const
+// Calendar entry types. See sql/722_create_school_date.sql — an entry is an
+// event, a term/half-term break, or a closure, shown on the parent-app calendar
+// for a venue.
+export const CALENDAR_TYPE = ['Event', 'Break', 'Closure'] as const

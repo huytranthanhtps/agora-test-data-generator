@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { Rng } from '@/core/rng'
 import { Uniqueness } from '@/core/uniqueness'
 import { seedFaker } from '@/core/faker-seed'
-import { generate } from '@/core/registry'
-import { schoolDateGenerator } from '@/core/generators/schoolDate'
+import { generate, getGenerator } from '@/core/registry'
+import { calendarGenerator } from '@/core/generators/calendar'
 
 function ctx() { return { rng: new Rng('s'), uniq: new Uniqueness(new Rng('s')) } }
 
@@ -13,30 +13,30 @@ function dateKey(d: string): string {
   return `${yyyy}-${mm}-${dd}`
 }
 
-describe('school date generator', () => {
+describe('calendar generator', () => {
   it('same seed yields identical output', () => {
-    const a = generate('schoolDate', { count: 10, len: 'normal', seed: 'abc' })
-    const b = generate('schoolDate', { count: 10, len: 'normal', seed: 'abc' })
+    const a = generate('calendar', { count: 10, len: 'normal', seed: 'abc' })
+    const b = generate('calendar', { count: 10, len: 'normal', seed: 'abc' })
     expect(a).toEqual(b)
   })
 
   it('emits every declared field', () => {
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 5, len: 'normal' }, ctx())
+    const rows = calendarGenerator.generate({ count: 5, len: 'normal' }, ctx())
     for (const r of rows) {
-      for (const f of schoolDateGenerator.fields) expect(r[f.key]).toBeTruthy()
+      for (const f of calendarGenerator.fields) expect(r[f.key]).toBeTruthy()
     }
   })
 
   it('names are unique within a batch', () => {
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 40, len: 'normal' }, ctx())
+    const rows = calendarGenerator.generate({ count: 40, len: 'normal' }, ctx())
     expect(new Set(rows.map(r => r.name)).size).toBe(rows.length)
   })
 
   it('honours the SQL all-day / timed and date-order constraints', () => {
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 60, len: 'normal' }, ctx())
+    const rows = calendarGenerator.generate({ count: 60, len: 'normal' }, ctx())
     for (const r of rows) {
       // end_date >= start_date
       expect(dateKey(r.endDate as string) >= dateKey(r.startDate as string)).toBe(true)
@@ -57,32 +57,22 @@ describe('school date generator', () => {
 
   it('only Events are ever timed', () => {
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 60, len: 'normal' }, ctx())
+    const rows = calendarGenerator.generate({ count: 60, len: 'normal' }, ctx())
     for (const r of rows) {
       if (r.allDay === 'No') expect(r.type).toBe('Event')
     }
   })
 
-  it('emits a non-empty location for every row, spanning several shapes', () => {
+  it('no longer declares or emits a location field', () => {
+    expect(calendarGenerator.fields.map(f => f.key)).not.toContain('location')
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 60, len: 'normal' }, ctx())
-    for (const r of rows) expect((r.location as string).length).toBeGreaterThan(0)
-    // The four shapes are distinguishable: a room name starts with one of the
-    // room words, a civic venue ends with a civic suffix, a street address
-    // starts with a house number. Seeing >1 shape proves the picker isn't
-    // stuck on a single branch.
-    const shape = (v: string): string => {
-      if (/^(Room|Studio|Lab|Hall) /.test(v)) return 'room'
-      if (/(Community Club|Sports Complex|Public Library|Convention Centre)$/.test(v)) return 'civic'
-      if (/^\d/.test(v)) return 'street'
-      return 'landmark'
-    }
-    expect(new Set(rows.map(r => shape(r.location as string))).size).toBeGreaterThan(1)
+    const rows = calendarGenerator.generate({ count: 20, len: 'normal' }, ctx())
+    for (const r of rows) expect('location' in r).toBe(false)
   })
 
   it('description is rich HTML', () => {
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 10, len: 'normal' }, ctx())
+    const rows = calendarGenerator.generate({ count: 10, len: 'normal' }, ctx())
     for (const r of rows) {
       const html = r.description as string
       expect(html).toContain('<h2>')
@@ -92,8 +82,8 @@ describe('school date generator', () => {
   })
 
   it('description richness scales with len', () => {
-    const normal = generate('schoolDate', { count: 5, len: 'normal', seed: 'abc' })
-    const stress = generate('schoolDate', { count: 5, len: 'stress', seed: 'abc' })
+    const normal = generate('calendar', { count: 5, len: 'normal', seed: 'abc' })
+    const stress = generate('calendar', { count: 5, len: 'stress', seed: 'abc' })
     const total = (rows: { description?: unknown }[]) =>
       rows.reduce((n, r) => n + String(r.description).length, 0)
     expect(total(stress)).toBeGreaterThan(total(normal))
@@ -104,9 +94,17 @@ describe('school date generator', () => {
   // fallback, which appends a ' XXXX' 4-letter suffix. An unbounded name source
   // never needs that — so the absence of the suffix is what proves the source.
   it('names have enough variety that uniq never falls back to a suffix', () => {
-    const rows = generate('schoolDate', { count: 100, len: 'normal', seed: 'variety' })
+    const rows = generate('calendar', { count: 100, len: 'normal', seed: 'variety' })
     const suffixed = rows.map(r => r.name as string).filter(n => / [A-Z]{4}$/.test(n))
     expect(suffixed).toEqual([])
     expect(new Set(rows.map(r => r.name)).size).toBe(100)
+  })
+
+  it('is registered as the calendar generator', () => {
+    expect(calendarGenerator.key).toBe('calendar')
+    expect(calendarGenerator.label).toBe('Calendar')
+    expect(getGenerator('calendar')).toBe(calendarGenerator)
+    expect(getGenerator('schoolDate')).toBeUndefined()
+    expect(generate('calendar', { count: 3, len: 'normal', seed: 'abc' })).toHaveLength(3)
   })
 })

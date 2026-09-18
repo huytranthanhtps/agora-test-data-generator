@@ -21,6 +21,12 @@ Keep shortcuts a contiguous `1..N` run (a new generator gets `N+1`) — the
 keyboard selector in `App.tsx` matches a single keypress (`Number(e.key)`), so a
 shortcut ≥ 10 is registered and clickable but never keyboard-selectable.
 
+A generator's `key` is **internal**: `App.tsx` and the UI iterate `GENERATORS`,
+CSV/JSON export writes `label` + field values, and nothing persists the key (the
+selected entity lives in `useState`, not `localStorage` or the URL). So renaming
+a generator key breaks no stored state — only its own imports, the registry
+entry, and its `uniq` bucket strings need to follow.
+
 ## Invariants (MANDATORY — never regress these)
 
 These two are the product's core promise. A change that breaks either is a
@@ -30,6 +36,14 @@ STOP, not a caveat.
 
 Same non-empty seed → **identical** batch. A blank seed is *intentionally*
 random (`Rng` falls back to `Math.random()*2**32`, `faker.seed()` resets).
+
+The promise is **per build**: same seed → same batch from the same code. It is
+*not* stability across code changes — adding, removing or reordering a field
+shifts the `ctx.rng`/faker draw sequence, so a seed's output legitimately
+changes. Dropping Calendar's `location` did exactly that. Don't contort a
+deliberate change to preserve old output hashes; the hash check in
+`docs/rules/testing.md` is for proving a *refactor* is output-preserving, not a
+behaviour change.
 
 - Inside a generator, get randomness from **`ctx.rng`** (`int/bool/pick/shuffle/
   sample`) and from the seeded `faker` (`src/core/faker-seed.ts`).
@@ -54,11 +68,11 @@ Route any field that must be unique through
   value.
 - **That fallback degrades data quality silently — size the source to the
   batch.** Nothing errors when `produce()` runs out of variety; you just start
-  getting values like `September Holidays BMBL`. School Date's `name` used a
+  getting values like `September Holidays BMBL`. Calendar's `name` used a
   26-string pool, so a 100-row batch emitted **74** suffixed names before anyone
   noticed. A fixed pool is only safe for a `uniq`-wrapped field if it comfortably
   exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder
-  (`iconicName`), as `course`, `product`, `klass`, `message` and now `schoolDate`
+  (`iconicName`), as `course`, `product`, `klass`, `message` and now `calendar`
   all do. The trailing ` XXXX` is the observable smell — assert its absence to
   catch a regression (`docs/rules/testing.md`).
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
@@ -66,8 +80,8 @@ Route any field that must be unique through
   stays in one place.
 - **Not every field belongs in `uniq`.** Only wrap what a human would notice
   repeating (name, email, course title). A field whose real-world values
-  legitimately repeat must stay unwrapped — School Date's `location` is a room,
-  and several events sharing a room is correct data, not a duplicate. Same for
+  legitimately repeat must stay unwrapped — Calendar's `venue` is a campus, and
+  many entries sharing a campus is correct data, not a duplicate. Same for
   lorem-backed rich text (`description`), where collisions are already
   vanishingly unlikely. Wrapping these would fabricate variety the domain
   doesn't have.
