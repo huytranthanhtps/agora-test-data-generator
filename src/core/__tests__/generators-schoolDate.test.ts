@@ -63,21 +63,11 @@ describe('school date generator', () => {
     }
   })
 
-  it('emits a non-empty location for every row, spanning several shapes', () => {
+  it('no longer declares or emits a location field', () => {
+    expect(schoolDateGenerator.fields.map(f => f.key)).not.toContain('location')
     seedFaker('s')
-    const rows = schoolDateGenerator.generate({ count: 60, len: 'normal' }, ctx())
-    for (const r of rows) expect((r.location as string).length).toBeGreaterThan(0)
-    // The four shapes are distinguishable: a room name starts with one of the
-    // room words, a civic venue ends with a civic suffix, a street address
-    // starts with a house number. Seeing >1 shape proves the picker isn't
-    // stuck on a single branch.
-    const shape = (v: string): string => {
-      if (/^(Room|Studio|Lab|Hall) /.test(v)) return 'room'
-      if (/(Community Club|Sports Complex|Public Library|Convention Centre)$/.test(v)) return 'civic'
-      if (/^\d/.test(v)) return 'street'
-      return 'landmark'
-    }
-    expect(new Set(rows.map(r => shape(r.location as string))).size).toBeGreaterThan(1)
+    const rows = schoolDateGenerator.generate({ count: 20, len: 'normal' }, ctx())
+    for (const r of rows) expect('location' in r).toBe(false)
   })
 
   it('description is rich HTML', () => {

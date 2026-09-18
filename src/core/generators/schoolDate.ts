@@ -1,33 +1,10 @@
 import type { Generator } from '../types'
-import type { Rng } from '../rng'
-import { faker } from '../faker-seed'
 import { htmlMessage, iconicName } from '../text'
 import { BASE_DATE, addDays, fmtDate, fmtTime } from './shared'
 import { SCHOOL_DATE_TYPE, BUSINESS_UNITS, PROGRAMMES } from '../data'
 
 // Empty-time placeholder for all-day rows (mirrors NULL start_time/end_time).
 const NONE = '—'
-
-// Where the event physically happens: a specific place inside (or outside) the
-// `venue` campus. Drawn from the seeded faker so it stays reproducible, in four
-// shapes — street address, landmark, room name, external civic venue.
-const LANDMARK_SUFFIX = ['Centre', 'Hall', 'Auditorium', 'Pavilion'] as const
-const ROOM_WORD = ['Room', 'Studio', 'Lab', 'Hall'] as const
-const CIVIC_SUFFIX = ['Community Club', 'Sports Complex', 'Public Library', 'Convention Centre'] as const
-const ROOM_LETTER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as const
-
-function eventLocation(r: Rng): string {
-  switch (r.int(0, 3)) {
-    case 0:
-      return faker.location.streetAddress()
-    case 1:
-      return `${faker.company.name()} ${r.pick(LANDMARK_SUFFIX)}`
-    case 2:
-      return `${r.pick(ROOM_WORD)} ${r.pick(ROOM_LETTER)}${r.int(1, 4)}`
-    default:
-      return `${faker.location.city()} ${r.pick(CIVIC_SUFFIX)}`
-  }
-}
 
 export const schoolDateGenerator: Generator = {
   key: 'schoolDate',
@@ -38,7 +15,6 @@ export const schoolDateGenerator: Generator = {
     { key: 'type', label: 'Type' },
     { key: 'description', label: 'Description', html: true },
     { key: 'venue', label: 'Venue' },
-    { key: 'location', label: 'Location' },
     { key: 'programme', label: 'Programme' },
     { key: 'startDate', label: 'Start date' },
     { key: 'endDate', label: 'End date' },
@@ -54,7 +30,6 @@ export const schoolDateGenerator: Generator = {
       const venue = rng.pick(BUSINESS_UNITS)
       // programme_id NULL (whole venue) ~60%, narrowed to one programme ~40%.
       const programme = rng.bool(0.4) ? rng.pick(PROGRAMMES) : 'Whole venue'
-      const location = eventLocation(rng)
       const description = htmlMessage(rng, len)
 
       const start = addDays(BASE_DATE, rng.int(1, 120))
@@ -71,7 +46,6 @@ export const schoolDateGenerator: Generator = {
           type,
           description,
           venue,
-          location,
           programme,
           startDate: fmtDate(start),
           endDate: fmtDate(start),
@@ -89,7 +63,6 @@ export const schoolDateGenerator: Generator = {
         type,
         description,
         venue,
-        location,
         programme,
         startDate: fmtDate(start),
         endDate: fmtDate(end),
