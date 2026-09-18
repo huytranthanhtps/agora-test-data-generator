@@ -21,6 +21,12 @@ Keep shortcuts a contiguous `1..N` run (a new generator gets `N+1`) — the
 keyboard selector in `App.tsx` matches a single keypress (`Number(e.key)`), so a
 shortcut ≥ 10 is registered and clickable but never keyboard-selectable.
 
+A generator's `key` is **internal**: `App.tsx` and the UI iterate `GENERATORS`,
+CSV/JSON export writes `label` + field values, and nothing persists the key (the
+selected entity lives in `useState`, not `localStorage` or the URL). So renaming
+a generator key breaks no stored state — only its own imports, the registry
+entry, and its `uniq` bucket strings need to follow.
+
 ## Invariants (MANDATORY — never regress these)
 
 These two are the product's core promise. A change that breaks either is a
@@ -30,6 +36,14 @@ STOP, not a caveat.
 
 Same non-empty seed → **identical** batch. A blank seed is *intentionally*
 random (`Rng` falls back to `Math.random()*2**32`, `faker.seed()` resets).
+
+The promise is **per build**: same seed → same batch from the same code. It is
+*not* stability across code changes — adding, removing or reordering a field
+shifts the `ctx.rng`/faker draw sequence, so a seed's output legitimately
+changes. Dropping Calendar's `location` did exactly that. Don't contort a
+deliberate change to preserve old output hashes; the hash check in
+`docs/rules/testing.md` is for proving a *refactor* is output-preserving, not a
+behaviour change.
 
 - Inside a generator, get randomness from **`ctx.rng`** (`int/bool/pick/shuffle/
   sample`) and from the seeded `faker` (`src/core/faker-seed.ts`).
