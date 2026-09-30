@@ -50,3 +50,22 @@ describe('RecordCard members', () => {
     expect(screen.getByText('CHD-01')).toBeTruthy()
   })
 })
+
+describe('RecordCard rich block height', () => {
+  const html = '<div class="chat"><div class="msg"><span class="bubble">hi</span></div></div>'
+  const clipOf = (tall?: boolean) => {
+    const { container } = render(
+      <RecordCard
+        {...base}
+        onCopy={() => {}}
+        row={{ body: html }}
+        fields={[{ key: 'body', label: 'Body', html: true, tall }]}
+      />,
+    )
+    return container.querySelector('.rich-clip') as HTMLElement
+  }
+  it('uses a taller clip for tall fields and the default otherwise', () => {
+    expect(clipOf(true).className).toContain('max-h-[28rem]')
+    expect(clipOf(false).className).toContain('max-h-64')
+  })
+})

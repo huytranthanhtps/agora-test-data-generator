@@ -25,7 +25,7 @@ export const calendarGenerator: Generator = {
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
       const type = rng.pick(CALENDAR_TYPE)
-      const name = uniq.ensure('calendar.name', () => iconicName(rng, len))
+      const name = uniq.ensure('calendar.name', () => iconicName(rng, len, { icons: false }))
 
       const venue = rng.pick(BUSINESS_UNITS)
       // programme_id NULL (whole venue) ~60%, narrowed to one programme ~40%.

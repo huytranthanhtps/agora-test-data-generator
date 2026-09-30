@@ -26,6 +26,15 @@ describe('misc generators', () => {
     expect(r.type).toBe('update')
     expect(r.message).toMatch(/<\w+/)
   })
+  it('ticket subject is a lorem phrase, and the conversation preview is tall', () => {
+    seedFaker('s')
+    const rows = ticketGenerator.generate({ count: 20, len: 'normal' }, ctx())
+    for (const r of rows) {
+      expect(String(r.subject).split(' ').length).toBeGreaterThanOrEqual(4)
+      expect(['Absence Notice', 'General Enquiry']).not.toContain(r.subject)
+    }
+    expect(ticketGenerator.fields.find((f) => f.key === 'conversation')?.tall).toBe(true)
+  })
   it('ticket participants differ and conversation mentions both', () => {
     seedFaker('s')
     const [r] = ticketGenerator.generate({ count: 1, len: 'normal', messagesPerTicket: 4 }, ctx())

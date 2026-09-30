@@ -21,6 +21,7 @@ export interface FieldMeta {
   key: string
   label: string
   html?: boolean
+  tall?: boolean // rich block gets a taller preview clip (e.g. a chat transcript)
   members?: MemberSpec
 }
 

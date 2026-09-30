@@ -70,14 +70,15 @@ function fakerAnchor(r: Rng): string {
  * A unique display name: faker.js data (the meaningful anchor) + some lorem for
  * entropy + at most one emoji icon dropped in at a random position. Lorem length
  * still scales with `len`. Used for entity names and the Update Message title.
+ * Pass `{ icons: false }` for a title with no emoji (no icon draw is made).
  */
-export function iconicName(r: Rng, len: TextLen): string {
+export function iconicName(r: Rng, len: TextLen, opts?: { icons?: boolean }): string {
   const loremCount = len === 'stress' ? r.int(3, 5) : len === 'long' ? 2 : 1
   const tokens = [
     ...fakerAnchor(r).split(/\s+/),
     ...faker.lorem.words(loremCount).split(/\s+/).map(cap),
   ]
-  const iconCount = r.int(0, 1)
+  const iconCount = opts?.icons === false ? 0 : r.int(0, 1)
   for (let i = 0; i < iconCount; i++) {
     tokens.splice(r.int(0, tokens.length), 0, r.pick(NAME_ICONS))
   }
@@ -130,30 +131,34 @@ export function htmlMessage(r: Rng, len: TextLen): string {
   return parts.join('\n')
 }
 
-/** Ticket topics — the parent-facing purpose of the conversation (Subject). */
-export const TICKET_SCENARIOS = [
-  { key: 'absence', label: 'Absence Notice' },
-  { key: 'enquiry', label: 'General Enquiry' },
-] as const
-export type TicketScenario = (typeof TICKET_SCENARIOS)[number]['key']
+/** Emoji people actually send in chat (faces / gestures); MSG_EMOJI stays for rich messages. */
+const CHAT_EMOJI = ['😊', '😂', '🙏', '👍', '👌', '🙌', '😅', '😢', '❤️', '🎉', '😀', '🤝'] as const
 
-/** One chat bubble's inner HTML — lorem sentences scaled by `len`, plus a
- *  light emoji / bold fragment so the bubble still exercises rich text. */
-function bubbleText(r: Rng, len: TextLen): string {
+/** Chat-style plain text: lorem sentences, sometimes a trailing emoji or a plain date/time/amount. */
+function textBubble(r: Rng, len: TextLen): string {
   const n = len === 'stress' ? r.int(3, 5) : len === 'long' ? 2 : 1
   let s = Array.from({ length: n }, () => faker.lorem.sentence()).join(' ')
-  const roll = r.int(0, 3)
-  if (roll === 0) s = `${s} <strong>${date(r)}</strong>`
-  else if (roll === 1) s = `${s} (<strong>${money(r)}</strong>)`
-  else if (roll === 2) s = `${s} — <strong>${time(r)}</strong>`
-  if (r.int(0, 1) === 0) s = `${s} ${r.pick(MSG_EMOJI)}`
+  const roll = r.int(0, 9)
+  if (roll === 0) s = `${s} ${r.pick([date(r), time(r), money(r)])}`
+  else if (roll <= 3) s = `${s} ${r.pick(CHAT_EMOJI)}`
   return s
 }
 
+/** A reaction bubble made only of 1–3 emoji — real chats have plenty of these. */
+function emojiBubble(r: Rng): string {
+  return Array.from({ length: r.int(1, 3) }, () => r.pick(CHAT_EMOJI)).join(' ')
+}
+
+/** Conversation subject: capitalised lorem, length scaled by `len`. */
+export function ticketSubject(r: Rng, len: TextLen): string {
+  const n = len === 'stress' ? r.int(15, 25) : len === 'long' ? r.int(8, 14) : r.int(4, 8)
+  return words(n)
+}
+
 /**
- * A support-style chat between two participants, alternating speakers. Each
- * bubble's text is unique lorem; passing `uniq` guarantees no two bubbles in a
- * batch are identical.
+ * A chat between two participants, alternating speakers. Text bubbles are unique
+ * lorem (passing `uniq` guarantees no two are identical); ~10% are emoji-only
+ * reactions, which legitimately repeat and so stay outside `uniq`.
  */
 export function chatTranscript(
   r: Rng,
@@ -168,9 +173,11 @@ export function chatTranscript(
     const isA = i % 2 === 0
     const who = isA ? a : b
     const side = isA ? 'msg--a' : 'msg--b'
-    const text = uniq
-      ? uniq.ensure('ticket.bubble', () => bubbleText(r, len))
-      : bubbleText(r, len)
+    const text = r.bool(0.1)
+      ? emojiBubble(r)
+      : uniq
+        ? uniq.ensure('ticket.bubble', () => textBubble(r, len))
+        : textBubble(r, len)
     lines.push(
       `<div class="msg ${side}"><span class="who">${who}</span><span class="bubble">${text}</span></div>`,
     )
