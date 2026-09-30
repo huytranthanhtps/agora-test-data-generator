@@ -180,12 +180,14 @@ function MemberList({
  */
 function RichBlock({
   html,
+  tall,
   fmtId,
   copied,
   onCopyRich,
   onPreview,
 }: {
   html: string
+  tall?: boolean
   fmtId: string
   copied: boolean
   onCopyRich: (html: string, plain: string, id: string) => void
@@ -205,7 +207,10 @@ function RichBlock({
         ref={ref}
         data-fade={overflow ? 'true' : undefined}
         onClick={copyBubbleFromEvent}
-        className="rich-clip max-h-64 overflow-hidden rounded-lg border border-line bg-surface2 p-3"
+        className={cn(
+          'rich-clip overflow-hidden rounded-lg border border-line bg-surface2 p-3',
+          tall ? 'max-h-[28rem]' : 'max-h-64',
+        )}
       >
         <div className="rich" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
@@ -297,6 +302,7 @@ export function RecordCard({
                 <SectionHeader label={f.label} colorVar={categoryColorVar(fieldCategory(f.key))} />
                 <RichBlock
                   html={asStr(row[f.key])}
+                  tall={f.tall}
                   fmtId={fmtId}
                   copied={copiedId === fmtId}
                   onCopyRich={onCopyRich}

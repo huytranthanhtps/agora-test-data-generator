@@ -4,7 +4,7 @@ Static website that generates realistic, non-duplicating dummy data for testing
 Agora forms. Rebuild of the original vanilla-JS tool using Vite + React + TypeScript.
 
 ## Record types
-Parent, Student/Child, Course, Course Instance, Class, Product, Update Message, Ticket.
+Parent, Student/Child, Course, Course Instance, Class, Product, Update Message, Message (chat conversation), Calendar.
 
 ## Features
 - Seeded reproducibility (blank seed = random)

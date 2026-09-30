@@ -47,6 +47,13 @@ Before adding a new helper, check for an existing one:
 If a helper almost fits, extend it (add a param / sibling export) rather than
 copy-paste-tweak.
 
+`sgMobile` follows the Singapore plan `8xxx xxxx` / `9yxx xxxx` with y = 0–8;
+`99xx` is invalid (it collides with the 993/995/999 emergency codes). The
+reference used was Wikipedia's "Telephone numbers in Singapore" — IMDA's
+numbering PDFs are not machine-readable, so the primary source was never
+checked. Unverified: whether an `800x` prefix is usable (800 is the toll-free
+code).
+
 Careful with `VENUES` in `data.ts`: it is room-level but wired only into
 `klass.ts` — it is not a shared location pool. Calendar's `venue` field is a
 **campus** (`BUSINESS_UNITS`), a different thing.

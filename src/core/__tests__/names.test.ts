@@ -25,12 +25,13 @@ describe('names', () => {
     const r = new Rng('s')
     expect(sgPostcode(r)).toMatch(/^\d{6}$/)
   })
-  it('email is unique on collision', () => {
-    const uniq = new Uniqueness(new Rng('s'))
-    const p = { first: 'Jon', last: 'Tan', full: 'Jon Tan', gender: 'male', ethnicity: 'chinese' } as const
-    const e1 = makeEmail(p, uniq), e2 = makeEmail(p, uniq)
-    expect(e1).not.toBe(e2)
-    expect(e1).toMatch(/@yopmail\.com$/)
+  it('email is firstname.lastname plus a 2-digit number, unique on collision', () => {
+    const r = new Rng('s')
+    const uniq = new Uniqueness(r)
+    const p = { first: 'Franklin', last: 'Wong', full: 'Franklin Wong', gender: 'male', ethnicity: 'chinese' } as const
+    const emails = Array.from({ length: 60 }, () => makeEmail(p, uniq, r))
+    for (const e of emails) expect(e).toMatch(/^franklin\.wong\d{2}@yopmail\.com$/)
+    expect(new Set(emails).size).toBe(emails.length)
   })
   it('chineseName is 2-3 CJK chars', () => {
     const r = new Rng('s')

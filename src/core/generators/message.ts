@@ -14,7 +14,7 @@ export const messageGenerator: Generator = {
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => ({
-      title: uniq.ensure('message.title', () => iconicName(rng, len)),
+      title: uniq.ensure('message.title', () => iconicName(rng, len, { icons: false })),
       message: htmlMessage(rng, len),
       sendTo: rng.pick(SEND_TO),
       type: 'update',

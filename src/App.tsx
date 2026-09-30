@@ -70,13 +70,13 @@ export default function App() {
 
       <p className="shrink-0 px-4 pb-1 pt-3 text-[12.5px] text-muted sm:px-6">
         <span className="sm:hidden">
-          Tap any value to copy. On a <span className="font-medium text-ink">Ticket</span>, tap a
+          Tap any value to copy. On a <span className="font-medium text-ink">Message</span>, tap a
           message bubble to copy it.
         </span>
         <span className="hidden sm:inline">
           Click any value to copy.{' '}
           <span className="font-medium text-ink">Update Message</span> and{' '}
-          <span className="font-medium text-ink">Ticket</span> show a formatted preview — use{' '}
+          <span className="font-medium text-ink">Message</span> show a formatted preview — use{' '}
           <span className="font-medium text-ink">Copy formatted</span> to keep rich text for a
           WYSIWYG editor, or tap a message bubble to copy it. No duplicate names within a batch.
         </span>

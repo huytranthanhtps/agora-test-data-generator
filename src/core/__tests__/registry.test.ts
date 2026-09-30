@@ -6,6 +6,9 @@ describe('registry', () => {
     expect(GENERATORS).toHaveLength(8)
     expect(GENERATORS.map(g => g.shortcut)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
   })
+  it('labels the ticket generator Message in the nav', () => {
+    expect(getGenerator('ticket')?.label).toBe('Message')
+  })
   it('no longer exposes a standalone student generator', () => {
     expect(getGenerator('student')).toBeUndefined()
     expect(GENERATORS.map(g => g.key)).not.toContain('student')
