@@ -79,9 +79,9 @@ export const parentGenerator: Generator<ParentRow> = {
           }
         : makePerson(rng)
       const { dob } = dobForAge(rng, 28, 50)
-      // Parent email is registered first so it keeps the clean firstname.lastname
-      // form; children/guardians then draw from the same uniqueness bucket.
-      const email = makeEmail(p, uniq)
+      // Every email carries a 2-digit number; children/guardians draw from the
+      // same uniqueness bucket.
+      const email = makeEmail(p, uniq, rng)
       const mobile = sgMobile(rng)
       const address =
         len === 'stress'

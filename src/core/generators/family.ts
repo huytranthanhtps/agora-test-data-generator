@@ -46,8 +46,7 @@ export function makeChildren(
   return Array.from({ length: n }, () => {
     const p = makePerson(rng)
     const { dob, age } = dobForAge(rng, 4, 16)
-    // A Chinese name only fits Chinese-Singaporean children.
-    const cn = p.ethnicity === 'chinese' && rng.bool(0.5) ? chineseName(rng) : ''
+    const cn = chineseName(rng)
     const nick = preferredName(rng)
     const grade = rng.pick(GRADES)
     const allergies = len === 'normal' ? faker.lorem.words(2) : loremByLen(rng, len)
@@ -76,7 +75,7 @@ export function makeGuardians(rng: Rng, uniq: Uniqueness): Guardian[] {
       gender: p.gender,
       relationship: rng.pick(GUARDIAN_RELATIONSHIPS[p.gender]),
       mobile: sgMobile(rng),
-      email: makeEmail(p, uniq),
+      email: makeEmail(p, uniq, rng),
     }
   })
 }

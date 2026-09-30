@@ -19,6 +19,14 @@ describe('family', () => {
     }
   })
 
+  it('every child has a Chinese name', () => {
+    seedFaker('s')
+    const r = rng()
+    for (let i = 0; i < 40; i++) {
+      for (const k of makeChildren(r, 'Tan', 'normal')) expect(k.chineseName).toMatch(/^[一-鿿]{2,3}$/)
+    }
+  })
+
   it('children carry no email field', () => {
     seedFaker('s')
     const kids = makeChildren(rng(), 'Tan', 'normal')

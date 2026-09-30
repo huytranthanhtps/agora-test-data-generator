@@ -37,16 +37,14 @@ export function preferredName(rng: Rng): string {
   return rng.pick(NICKNAMES)
 }
 
-export function makeEmail(person: Person, uniq: Uniqueness): string {
+export function makeEmail(person: Person, uniq: Uniqueness, rng: Rng): string {
   const local = `${person.first}.${person.last}`
     .toLowerCase().replace(/[^a-z0-9.]+/g, '')
-  let seq = 0
   return uniq.ensure('email', () => {
-    const suffix = seq === 0 ? '' : String(seq)
-    seq++
-    // Uniqueness comes from the numeric suffix; yopmail.com is a disposable
-    // inbox service, so these never reach a real person's mailbox.
-    return `${local}${suffix}@${EMAIL_DOMAIN}`
+    const num = String(rng.int(0, 99)).padStart(2, '0')
+    // yopmail.com is a disposable inbox service, so these never reach a real
+    // person's mailbox.
+    return `${local}${num}@${EMAIL_DOMAIN}`
   })
 }
 

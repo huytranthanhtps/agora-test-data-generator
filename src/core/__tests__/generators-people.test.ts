@@ -29,10 +29,10 @@ describe('people generators', () => {
       expect(r.relationship).toBe(r.gender === 'male' ? 'father' : 'mother')
     }
   })
-  it('parent email is firstname.lastname on the yopmail.com domain', () => {
+  it('parent email is firstname.lastname + 2 digits on the yopmail.com domain', () => {
     seedFaker('s')
     const [r] = parentGenerator.generate({ count: 1, len: 'normal' }, ctx())
-    expect(r.email).toMatch(/^[a-z0-9.]+@yopmail\.com$/)
+    expect(r.email).toMatch(/^[a-z0-9.]+\d{2}@yopmail\.com$/)
   })
   it('parent emails are unique within a batch', () => {
     seedFaker('s')
