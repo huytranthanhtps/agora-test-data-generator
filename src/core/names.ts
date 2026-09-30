@@ -3,9 +3,9 @@ import { Uniqueness } from './uniqueness'
 import { LOCALE_FAKERS } from './faker-seed'
 import { CHINESE_CHARS, NICKNAMES, EMAIL_DOMAIN } from './data'
 
-// Singapore's main ethnic groups; each maps to a Latin-romanising faker locale
+// Name-origin groups; each maps to a pool of Latin-script faker locales
 // (see faker-seed.ts LOCALE_FAKERS).
-export const ETHNICITIES = ['chinese', 'malay', 'indian', 'eurasian'] as const
+export const ETHNICITIES = ['chinese', 'indian', 'african', 'western'] as const
 export type Ethnicity = (typeof ETHNICITIES)[number]
 
 export interface Person {
@@ -14,15 +14,15 @@ export interface Person {
 }
 
 /**
- * A person drawn from Singapore's main ethnic groups, names sourced from
- * Latin-romanising faker locales. Native-script locales (Chinese/Tamil) are
+ * A person drawn from a name-origin group, with names sourced from a locale in
+ * that group's Latin-script faker pool. Native-script locales (Chinese/Tamil) are
  * intentionally avoided so every name stays ASCII-friendly; a Chinese person's
  * CJK name is added separately (see `chineseName`).
  */
 export function makePerson(rng: Rng): Person {
   const ethnicity = rng.pick(ETHNICITIES)
   const gender: 'male' | 'female' = rng.bool() ? 'male' : 'female'
-  const f = LOCALE_FAKERS[ethnicity]
+  const f = rng.pick(LOCALE_FAKERS[ethnicity])
   const first = f.person.firstName(gender)
   const last = f.person.lastName()
   return { first, last, full: `${first} ${last}`, gender, ethnicity }
