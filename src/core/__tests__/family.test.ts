@@ -33,14 +33,14 @@ describe('family', () => {
     for (const k of kids) expect('email' in k).toBe(false)
   })
 
-  it('makeGuardians yields 0-2 guardians with gender-consistent relationships', () => {
+  it('makeGuardians yields 1-2 guardians with gender-consistent relationships', () => {
     seedFaker('s')
     const r = rng(), u = uniq()
     const male = new Set(['Grandfather', 'Uncle', 'Family Friend'])
     const female = new Set(['Grandmother', 'Aunt', 'Family Friend'])
     for (let i = 0; i < 20; i++) {
       const gs = makeGuardians(r, u)
-      expect(gs.length).toBeGreaterThanOrEqual(0)
+      expect(gs.length).toBeGreaterThanOrEqual(1)
       expect(gs.length).toBeLessThanOrEqual(2)
       for (const g of gs) {
         expect((g.gender === 'male' ? male : female).has(g.relationship)).toBe(true)
