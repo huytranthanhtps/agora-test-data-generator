@@ -50,10 +50,12 @@ export function makeEmail(person: Person, uniq: Uniqueness): string {
   })
 }
 
+// Singapore plan: 8xxx xxxx, or 9yxx xxxx with y in 0-8 (99xx is not a mobile range).
 export function sgMobile(rng: Rng): string {
   const first = rng.pick(['8', '9'] as const)
-  const rest = Array.from({ length: 7 }, () => rng.int(0, 9)).join('')
-  return `${first}${rest.slice(0, 3)} ${rest.slice(3)}`
+  const second = rng.int(0, first === '9' ? 8 : 9)
+  const rest = Array.from({ length: 6 }, () => rng.int(0, 9)).join('')
+  return `${first}${second}${rest.slice(0, 2)} ${rest.slice(2)}`
 }
 
 export function sgPostcode(rng: Rng): string {

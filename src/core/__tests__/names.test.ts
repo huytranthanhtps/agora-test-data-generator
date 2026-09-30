@@ -8,6 +8,18 @@ describe('names', () => {
     const r = new Rng('s')
     for (let i = 0; i < 50; i++) expect(sgMobile(r)).toMatch(/^[89]\d{3} \d{4}$/)
   })
+  it('mobile follows the SG numbering plan: 8xxx or 9yxx with y in 0-8', () => {
+    const r = new Rng('plan')
+    const seen = new Set<string>()
+    for (let i = 0; i < 2000; i++) {
+      const m = sgMobile(r)
+      expect(m).toMatch(/^(8\d{3}|9[0-8]\d{2}) \d{4}$/)
+      seen.add(m.slice(0, 2))
+    }
+    // Every valid two-digit prefix is reachable (80-89 and 90-98); 99 never is.
+    expect(seen.has('99')).toBe(false)
+    expect(seen.size).toBe(19)
+  })
   it('postcode is 6 digits', () => {
     const r = new Rng('s')
     expect(sgPostcode(r)).toMatch(/^\d{6}$/)
