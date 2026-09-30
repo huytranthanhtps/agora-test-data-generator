@@ -74,9 +74,9 @@ Route any field that must be unique through
   getting values like `September Holidays BMBL`. Calendar's `name` used a
   26-string pool, so a 100-row batch emitted **74** suffixed names before anyone
   noticed. A fixed pool is only safe for a `uniq`-wrapped field if it comfortably
-  exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder
-  (`iconicName`), as `course`, `product`, `klass`, `message` and now `calendar`
-  all do. The trailing ` XXXX` is the observable smell — assert its absence to
+  exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder —
+  `anchoredName` (`[faker value] [lorem]`: `course`, `klass`, `product`) or
+  `fakerName` (`message`, `calendar`) — as those generators all do. The trailing ` XXXX` is the observable smell — assert its absence to
   catch a regression (`docs/rules/testing.md`).
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
 - **Never hand-roll dedup** in a generator — reuse `Uniqueness` so the guarantee

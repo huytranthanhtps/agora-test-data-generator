@@ -61,7 +61,7 @@ Same hash = same output. Do this whenever an agent (or you) calls a change
 ## Beware "output varies with `len`" assertions
 
 The same call-sequence coupling makes a whole class of test **pass for the wrong
-reason**. `htmlMessage` and `iconicName` consume a *different number* of `rng`
+reason**. `htmlMessage` and `fakerName` consume a *different number* of `rng`
 draws per `len`, so every draw after them shifts too — which means an unrelated
 field's value also changes between `len: 'normal'` and `len: 'stress'`. A test
 like this therefore proves nothing:

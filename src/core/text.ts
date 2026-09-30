@@ -46,10 +46,6 @@ const ol = (r: Rng, n: number) =>
 const para = (r: Rng, n: number) =>
   `<p>${Array.from({ length: n }, () => richSentence(r)).join(' ')}</p>`
 
-// Emoji icons (school/education-flavoured, no typographic symbols) dropped into
-// generated names to exercise emoji rendering.
-const NAME_ICONS = ['📘', '📗', '📙', '📚', '📖', '✏️', '🖍️', '📝', '📐', '📏', '🧪', '🔬', '🔭', '🎨', '🧮', '🔢', '🚀', '⭐', '🎯', '🎓', '🏫', '🏆', '🥇', '🧩', '💡', '🎵', '🎭', '⚽', '🏀', '🌍', '💻', '🧠'] as const
-
 const capWords = (s: string) => s.split(/\s+/).map(cap).join(' ')
 
 /** A few real words drawn from faker.js — the "meaningful" anchor of a name. */
@@ -66,23 +62,26 @@ function fakerAnchor(r: Rng): string {
   }
 }
 
-/**
- * A unique display name: faker.js data (the meaningful anchor) + some lorem for
- * entropy + at most one emoji icon dropped in at a random position. Lorem length
- * still scales with `len`. Used for entity names and the Update Message title.
- * Pass `{ icons: false }` for a title with no emoji (no icon draw is made).
- */
-export function iconicName(r: Rng, len: TextLen, opts?: { icons?: boolean }): string {
+function loremTail(r: Rng, len: TextLen): string[] {
   const loremCount = len === 'stress' ? r.int(3, 5) : len === 'long' ? 2 : 1
-  const tokens = [
-    ...fakerAnchor(r).split(/\s+/),
-    ...faker.lorem.words(loremCount).split(/\s+/).map(cap),
-  ]
-  const iconCount = opts?.icons === false ? 0 : r.int(0, 1)
-  for (let i = 0; i < iconCount; i++) {
-    tokens.splice(r.int(0, tokens.length), 0, r.pick(NAME_ICONS))
-  }
-  return tokens.join(' ')
+  return faker.lorem.words(loremCount).split(/\s+/).map(cap)
+}
+
+/**
+ * `[anchor] [short lorem]` — the anchor is a faker value that fits the entity
+ * (a genre, an animal, a product name); the lorem tail adds uniqueness and scales
+ * with `len`. No icons.
+ */
+export function anchoredName(r: Rng, len: TextLen, anchor: string): string {
+  return [...capWords(anchor).split(/\s+/), ...loremTail(r, len)].join(' ')
+}
+
+/**
+ * A mixed-anchor display name (faker.js data + lorem, no icons) for records with
+ * no single natural anchor: the Update Message title and the Calendar name.
+ */
+export function fakerName(r: Rng, len: TextLen): string {
+  return [...fakerAnchor(r).split(/\s+/), ...loremTail(r, len)].join(' ')
 }
 
 /** Meaningful, length-scaled description for a Product. */

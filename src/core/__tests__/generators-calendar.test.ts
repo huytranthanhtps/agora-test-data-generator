@@ -89,7 +89,7 @@ describe('calendar generator', () => {
     expect(total(stress)).toBeGreaterThan(total(normal))
   })
 
-  // Names come from `iconicName` (faker + lorem), not a fixed pool. The pool
+  // Names come from `fakerName` (faker + lorem), not a fixed pool. The pool
   // held only 26 strings, so a batch this size forced `Uniqueness` into its
   // fallback, which appends a ' XXXX' 4-letter suffix. An unbounded name source
   // never needs that — so the absence of the suffix is what proves the source.

@@ -1,6 +1,7 @@
 import type { Generator } from '../types'
 import { makePerson } from '../names'
-import { iconicName } from '../text'
+import { anchoredName } from '../text'
+import { faker } from '../faker-seed'
 import { SUBJECTS, LEVELS, BUSINESS_UNITS, VENUES, PROGRAMMES } from '../data'
 
 export const klassGenerator: Generator = {
@@ -17,7 +18,7 @@ export const klassGenerator: Generator = {
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
-      const className = uniq.ensure('class.name', () => iconicName(rng, len))
+      const className = uniq.ensure('class.name', () => anchoredName(rng, len, faker.animal.type()))
       const teachers = Array.from({ length: rng.int(1, 3) }, () =>
         uniq.ensure('class.teacher', () => makePerson(rng).full)).join(', ')
       const courses = Array.from({ length: rng.int(1, 3) }, () =>
