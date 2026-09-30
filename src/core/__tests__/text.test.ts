@@ -1,42 +1,49 @@
 import { describe, it, expect } from 'vitest'
 import { Rng } from '@/core/rng'
-import { seedFaker } from '@/core/faker-seed'
+import { faker, seedFaker } from '@/core/faker-seed'
 import { Uniqueness } from '@/core/uniqueness'
 import { generate } from '@/core/registry'
-import { loremByLen, htmlMessage, chatTranscript, iconicName } from '@/core/text'
-
-// Typographic symbols that must no longer appear in generated names.
-const BANNED_SYMBOLS = ['★', '✦', '✽', '◆', '▶']
-
-describe('iconicName icon policy', () => {
-  it('inserts at most one icon and never a typographic symbol', () => {
-    seedFaker('s')
-    const r = new Rng('s')
-    for (const len of ['normal', 'long', 'stress'] as const) {
-      for (let i = 0; i < 40; i++) {
-        const name = iconicName(r, len)
-        for (const sym of BANNED_SYMBOLS) expect(name).not.toContain(sym)
-        const icons = [...name].filter(ch => /\p{Extended_Pictographic}/u.test(ch)).length
-        expect(icons).toBeLessThanOrEqual(1)
-      }
-    }
-  })
-})
+import { loremByLen, htmlMessage, chatTranscript, anchoredName } from '@/core/text'
 
 const EMOJI = /\p{Extended_Pictographic}/u
 
-describe('iconicName icons option', () => {
-  it('icons:false never contains an emoji', () => {
+describe('entity names', () => {
+  it('anchoredName is the capitalised anchor plus a lorem tail, with no emoji', () => {
     seedFaker('s')
     const r = new Rng('s')
     for (const len of ['normal', 'long', 'stress'] as const) {
-      for (let i = 0; i < 60; i++) expect(EMOJI.test(iconicName(r, len, { icons: false }))).toBe(false)
+      const name = anchoredName(r, len, 'fantasy')
+      expect(name).toMatch(/^Fantasy( \S+)+$/)
+      expect(EMOJI.test(name)).toBe(false)
     }
   })
   it('Update Message and Calendar titles carry no emoji', () => {
     for (const [key, field] of [['message', 'title'], ['calendar', 'name']] as const) {
-      const rows = generate(key, { count: 60, len: 'stress', seed: 'no-icons' })
-      for (const row of rows) expect(EMOJI.test(String(row[field]))).toBe(false)
+      for (const row of generate(key, { count: 60, len: 'stress', seed: 'no-icons' })) {
+        expect(EMOJI.test(String(row[field]))).toBe(false)
+      }
+    }
+  })
+  it('Course, Class and Product names are anchored on faker values, icon-free and unsuffixed', () => {
+    seedFaker('anchor')
+    const genres = new Set(Array.from({ length: 400 }, () => faker.book.genre().toLowerCase()))
+    const animals = new Set(Array.from({ length: 400 }, () => faker.animal.type().toLowerCase()))
+    const startsWithAny = (name: string, set: Set<string>) =>
+      [...set].some((v) => name.toLowerCase().startsWith(`${v} `))
+    for (const len of ['normal', 'long', 'stress'] as const) {
+      const opts = { count: 100, len, seed: 'anchor' }
+      const courses = generate('course', opts).map((r) => String(r.name))
+      const classes = generate('klass', opts).map((r) => String(r.className))
+      const products = generate('product', opts).flatMap((r) => [String(r.name), String(r.variantName)])
+      for (const n of courses) expect(startsWithAny(n, genres)).toBe(true)
+      for (const n of classes) expect(startsWithAny(n, animals)).toBe(true)
+      for (const n of [...courses, ...classes, ...products]) {
+        expect(EMOJI.test(n)).toBe(false)
+        expect(n).not.toMatch(/ [A-Z]{4}$/)
+      }
+      for (const n of products) expect(n.split(' ').length).toBeGreaterThanOrEqual(4)
+      expect(new Set(courses).size).toBe(100)
+      expect(new Set(classes).size).toBe(100)
     }
   })
 })

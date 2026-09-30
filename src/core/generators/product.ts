@@ -1,5 +1,6 @@
 import type { Generator } from '../types'
-import { productDescription, iconicName } from '../text'
+import { productDescription, anchoredName } from '../text'
+import { faker } from '../faker-seed'
 import {
   SUBJECTS,
   GRADES,
@@ -36,18 +37,19 @@ export const productGenerator: Generator = {
       const sku = uniq.ensure('product.sku', () =>
         'AGR-' + Array.from({ length: 6 }, () => ALNUM[rng.int(0, ALNUM.length - 1)]).join(''),
       )
-      // Name/variant are faker + lorem + icons; subject/grade/base/edition
+      // Name/variant are a faker product name + lorem; subject/grade/base/edition
       // still drive the (education-flavoured) description.
       const subject = rng.pick(SUBJECTS)
       const grade = rng.pick(GRADES)
       const base = rng.pick(PRODUCT_BASES)
       const edition = rng.pick(PRODUCT_EDITIONS)
-      const name = uniq.ensure('product.name', () => iconicName(rng, len))
+      const name = uniq.ensure('product.name', () =>
+        anchoredName(rng, len, faker.commerce.productName()))
       return {
         sku,
         name,
         description: productDescription(rng, { subject, grade, base, edition }, len),
-        variantName: iconicName(rng, len),
+        variantName: anchoredName(rng, len, faker.commerce.productName()),
         status: rng.pick(PRODUCT_STATUS),
         productType: rng.pick(PRODUCT_TYPE),
         variantType: rng.pick(VARIANT_TYPE),

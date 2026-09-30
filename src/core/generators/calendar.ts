@@ -1,5 +1,5 @@
 import type { Generator } from '../types'
-import { htmlMessage, iconicName } from '../text'
+import { htmlMessage, fakerName } from '../text'
 import { BASE_DATE, addDays, fmtDate, fmtTime } from './shared'
 import { CALENDAR_TYPE, BUSINESS_UNITS, PROGRAMMES } from '../data'
 
@@ -25,7 +25,7 @@ export const calendarGenerator: Generator = {
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => {
       const type = rng.pick(CALENDAR_TYPE)
-      const name = uniq.ensure('calendar.name', () => iconicName(rng, len, { icons: false }))
+      const name = uniq.ensure('calendar.name', () => fakerName(rng, len))
 
       const venue = rng.pick(BUSINESS_UNITS)
       // programme_id NULL (whole venue) ~60%, narrowed to one programme ~40%.

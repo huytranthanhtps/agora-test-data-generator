@@ -1,5 +1,6 @@
 import type { Generator } from '../types'
-import { htmlMessage, iconicName } from '../text'
+import { htmlMessage, anchoredName } from '../text'
+import { faker } from '../faker-seed'
 import { SUBJECT_TYPE } from '../data'
 
 export const courseGenerator: Generator = {
@@ -21,9 +22,9 @@ export const courseGenerator: Generator = {
     return Array.from({ length: count }, () => {
       const sessions = rng.int(4, 12)
       const duration = rng.pick([60, 90, 120] as const)
-      // Name is faker + lorem + icons; description is rich HTML (same generator
+      // Name is a faker genre + lorem; description is rich HTML (same generator
       // as the Update Message message field).
-      const name = uniq.ensure('course.name', () => iconicName(rng, len))
+      const name = uniq.ensure('course.name', () => anchoredName(rng, len, faker.book.genre()))
       const minAge = rng.int(4, 12)
       return {
         name,

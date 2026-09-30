@@ -1,5 +1,5 @@
 import type { Generator } from '../types'
-import { htmlMessage, iconicName } from '../text'
+import { htmlMessage, fakerName } from '../text'
 import { SEND_TO } from '../data'
 
 export const messageGenerator: Generator = {
@@ -14,7 +14,7 @@ export const messageGenerator: Generator = {
   ],
   generate({ count, len }, { rng, uniq }) {
     return Array.from({ length: count }, () => ({
-      title: uniq.ensure('message.title', () => iconicName(rng, len, { icons: false })),
+      title: uniq.ensure('message.title', () => fakerName(rng, len)),
       message: htmlMessage(rng, len),
       sendTo: rng.pick(SEND_TO),
       type: 'update',
