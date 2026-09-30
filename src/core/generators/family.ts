@@ -66,7 +66,7 @@ export function makeChildren(
 
 /** Guardians are unrelated in surname; the relationship stays gender-consistent. */
 export function makeGuardians(rng: Rng, uniq: Uniqueness): Guardian[] {
-  const n = rng.int(0, 2)
+  const n = rng.int(1, 2)
   return Array.from({ length: n }, () => {
     const p = makePerson(rng)
     return {

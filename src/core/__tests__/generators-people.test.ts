@@ -7,6 +7,14 @@ import { parentGenerator } from '@/core/generators/parent'
 function ctx() { return { rng: new Rng('s'), uniq: new Uniqueness(new Rng('s')) } }
 
 describe('people generators', () => {
+  it('every parent has at least one child and one guardian', () => {
+    seedFaker('s')
+    const rows = parentGenerator.generate({ count: 200, len: 'normal' }, ctx())
+    for (const r of rows) {
+      expect(r.children.length).toBeGreaterThanOrEqual(1)
+      expect(r.guardians.length).toBeGreaterThanOrEqual(1)
+    }
+  })
   it('parent has no duplicate emails in a batch', () => {
     seedFaker('s')
     const rows = parentGenerator.generate({ count: 30, len: 'normal' }, ctx())
