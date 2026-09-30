@@ -76,8 +76,9 @@ Route any field that must be unique through
   noticed. A fixed pool is only safe for a `uniq`-wrapped field if it comfortably
   exceeds realistic batch sizes; otherwise use a faker/lorem-backed builder —
   `anchoredName` (`[faker value] [lorem]`: `course`, `klass`, `product`) or
-  `fakerName` (`message`, `calendar`) — as those generators all do. The trailing ` XXXX` is the observable smell — assert its absence to
-  catch a regression (`docs/rules/testing.md`).
+  `fakerName` (`message`, `calendar`) — as those generators all do. The
+  trailing ` XXXX` is the observable smell — assert its absence to catch a
+  regression (`docs/rules/testing.md`).
 - Pick a stable `bucket` string per logical field (e.g. email, course name).
 - **Never hand-roll dedup** in a generator — reuse `Uniqueness` so the guarantee
   stays in one place.

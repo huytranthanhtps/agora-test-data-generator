@@ -57,7 +57,7 @@ describe('entity names', () => {
     for (const len of ['normal', 'long', 'stress'] as const) {
       const opts = { count: 100, len, seed: 'anchor' }
       const courses = generate('course', opts).map((r) => String(r.name))
-      const classes = generate('class', opts).map((r) => String(r.className))
+      const classes = generate('klass', opts).map((r) => String(r.className))
       const products = generate('product', opts).flatMap((r) => [String(r.name), String(r.variantName)])
       for (const n of courses) expect(startsWithAny(n, genres)).toBe(true)
       for (const n of classes) expect(startsWithAny(n, animals)).toBe(true)
